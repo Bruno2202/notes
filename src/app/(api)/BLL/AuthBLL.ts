@@ -1,16 +1,17 @@
 import { UserDAL } from "../DAL/UserDAL";
+import { UserModel } from "../MODEL/UserModel";
 import { UserBLL } from "./UserBLL";
 
 export class AuthBLL {
-    static async validateLogin(email: string, password: string): Promise<boolean> {
+    static async validateLogin(email: string, password: string): Promise<UserModel | null> {
         if (!UserBLL.isValidEmail(email)) {
-            return false;
+            return null;
         }
 
         const user = await UserDAL.selectByEmail(email);
         if (user && user.getPassword === password) {
-            return true;
+            return user;
         }
-        return false;
+        return null;
     }
 }

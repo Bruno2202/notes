@@ -3,6 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import Separator from './Separator';
 import { Href, router } from 'expo-router';
+import { AuthController } from '../app/(api)/CONTROLLER/AuthController';
 
 export default function UserOptions() {
 
@@ -28,7 +29,7 @@ export default function UserOptions() {
                 </View>
             </TouchableOpacity>
             <Separator />
-            <TouchableOpacity style={styles.option} onPress={() => navigation("../(auth)")} activeOpacity={0.4}>
+            <TouchableOpacity style={styles.option} onPress={() => AuthController.logout()} activeOpacity={0.4}>
                 <MaterialIcons name={"logout"} color={theme.colorRed} size={24} />
                 <Text style={styles.optionText}>Sair</Text>
                 <View style={styles.optionGo}>

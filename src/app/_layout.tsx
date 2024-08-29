@@ -4,18 +4,18 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { View } from "react-native";
 import { theme } from "@/theme";
-
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
-import * as SQLite from "expo-sqlite"; // Dev tool
 import Toast from "react-native-toast-message";
-
 import UserProvider from "../contexts/UserContext";
 
 SplashScreen.preventAutoHideAsync();
+
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
+import * as SQLite from "expo-sqlite"; // Dev tool
 const db = SQLite.openDatabaseSync("notes");// Dev tool
 
 export default function Layout() {
     useDrizzleStudio(db); // Dev tool
+
     const [loaded, error] = useFonts({
         'fontFamilyBold': require('../../assets/fonts/PlusJakartaSans-Bold.ttf'),
         'fontFamilySemiBold': require('../../assets/fonts/PlusJakartaSans-SemiBold.ttf'),

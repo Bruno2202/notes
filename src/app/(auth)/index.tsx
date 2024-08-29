@@ -28,7 +28,6 @@ export default function SignIn() {
 
     const navigation = (route: Href) => {
         router.replace(route);
-        // router.navigate(route);
     }
 
     async function handleLogin() {

@@ -6,9 +6,10 @@ import { useState } from "react";
 interface InputTypes {
     placeholder: string;
     onChangeText?: any;
+    canView: boolean;
 }
 
-export default function PasswordInput({ placeholder, onChangeText }: InputTypes) {
+export default function PasswordInput({ placeholder, onChangeText, canView }: InputTypes) {
     const [visible, setVisible] = useState(true);
 
     return (
@@ -20,13 +21,21 @@ export default function PasswordInput({ placeholder, onChangeText }: InputTypes)
                 secureTextEntry={visible}
                 onChangeText={onChangeText}
             />
-            <Pressable onPress={() => { setVisible(!visible) }}>
+            {canView ? (
+                <Pressable onPress={() => { setVisible(!visible) }}>
+                    <MaterialIcons
+                        name={visible ? "visibility" : "visibility-off" }
+                        size={24}
+                        color={theme.colorGrey}
+                    />
+                </Pressable>
+            ) : (
                 <MaterialIcons
-                    name={visible ? "visibility" : "visibility-off" }
+                    name={'lock'}
                     size={24}
                     color={theme.colorGrey}
                 />
-            </Pressable>
+            )}
         </View>
     );
 }

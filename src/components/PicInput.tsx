@@ -1,7 +1,6 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { theme } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
 import { useState } from "react";
 import { Image } from "expo-image";
 import { ImageModel } from "../app/(api)/MODEL/ImageModel";
@@ -19,6 +18,7 @@ export default function PicInput({ onImageSelected }: PicInputProps) {
                 <TouchableOpacity activeOpacity={0.6} onPress={                        
                     async () => {ImageModel.pickImage().then(image => {
                         setUserPic(image);
+                        onImageSelected(image);
                     });
                 }}>
                     <Image source={{ uri: userPic }} style={styles.picture} />
@@ -27,6 +27,7 @@ export default function PicInput({ onImageSelected }: PicInputProps) {
                 <TouchableOpacity style={styles.picture} activeOpacity={0.6} onPress={
                     async () => {ImageModel.pickImage().then(image => {
                         setUserPic(image);
+                        onImageSelected(image)
                     });
                 }}>
                     <MaterialCommunityIcons name="camera-outline" size={52} color={theme.colorGrey} />

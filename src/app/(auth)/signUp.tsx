@@ -40,7 +40,7 @@ export default function SignUp() {
 
             if (await UserController.validateFields(user)) {
                 router.push({
-                    pathname: '/signUp/userPic',
+                    pathname: '/(auth)/userPic',
                     params: { name, email, password }
                 });
             };
@@ -55,8 +55,8 @@ export default function SignUp() {
             <View style={styles.forms}>
                 <Input placeholder="Nome de usuário" icon={"person"} onChangeText={setName} maxLength={25} />
                 <Input placeholder="Email" icon={"mail-outline"} onChangeText={setEmail} />
-                <PasswordInput placeholder="Senha" onChangeText={setPassword} />
-                <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} />
+                <PasswordInput placeholder="Senha" onChangeText={setPassword} canView={true} />
+                <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} canView={false} />
                 <View style={styles.next}>
                     <Button onPress={nextStep} text={"AVANÇAR"} />
                     <Link style={styles.signIn} href={"/"}>

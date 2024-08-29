@@ -4,8 +4,8 @@ import Button from "../../components/Button";
 import { router, useLocalSearchParams } from "expo-router";
 import { UserController } from "../(api)/CONTROLLER/UserController";
 import { UserModel } from "../(api)/MODEL/UserModel";
-import { useState } from "react";
 import PicInput from "@/src/components/PicInput";
+import { useState } from "react";
 
 export default function UserPic() {
     const [userPic, setUserPic] = useState<string | null>(null);

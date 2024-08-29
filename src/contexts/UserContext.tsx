@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { UserModel } from "../app/(api)/MODEL/UserModel";
 import { UserController } from "../app/(api)/CONTROLLER/UserController";
-import { View } from "react-native";
 
 interface UserProviderProps {
     children: ReactNode;
@@ -20,7 +19,7 @@ export default function UserProvider({ children }: UserProviderProps) {
     useEffect(() => {
         async function fetchUserData() {
             try {
-                const data = await UserController.selectById(20);
+                const data = await UserController.selectById(3);
                 setUserData(data);
             } catch (error) {
                 console.error("Erro ao obter dados do usuário:", error);

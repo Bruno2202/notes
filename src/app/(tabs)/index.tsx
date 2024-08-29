@@ -45,7 +45,7 @@ export default function Index() {
 					</Text>
 				}
 				<Image source={require('../../../assets/images/cat.png')} />
-				<Button text="Teste" onPress={() => TesteToken()}/>
+				{/* <Button text="Teste" onPress={() => TesteToken()}/> */}
 			</View>
 			<SearchBar />
 		</View>

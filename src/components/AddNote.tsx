@@ -1,9 +1,30 @@
-import { View } from "react-native";
+import { theme } from "@/theme";
+import { MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 
-export default function AddNote() {
+interface AddNoteProps {
+    onPress: () => void
+}
+
+export default function AddNote({ onPress }: AddNoteProps) {
     return (
-        <View>
-            
-        </View>
+        <TouchableOpacity style={styles.container} activeOpacity={0.6} onPress={onPress}>
+            <MaterialIcons name="add" color={theme.colorWhite} size={28} />
+        </TouchableOpacity>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        position: 'absolute',
+        right: 24,
+        bottom: 24,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 56,
+        height: 56,
+        padding: 12,
+        backgroundColor: theme.colorBlue,
+        borderRadius: 8,
+    },
+});

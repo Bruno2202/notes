@@ -3,7 +3,7 @@ import { theme } from "@/theme";
 
 interface InputProps {
     text: string;
-    onPress?: () => void;   // Pode ou não receber função (?)
+    onPress?: () => void;
 }
 
 export default function Button({ text, onPress }: InputProps) {

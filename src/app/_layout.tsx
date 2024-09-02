@@ -60,6 +60,13 @@ export default function Layout() {
                             headerShown: false,
                         }}
                     />
+                    <Stack.Screen
+                        name="(notes)"
+                        options={{
+                            statusBarTranslucent: true,
+                            headerShown: false,
+                        }}
+                    />
                 </Stack>
                 <Toast />
             </UserProvider>

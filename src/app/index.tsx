@@ -11,7 +11,6 @@ export default function Page() {
         const checkToken = async () => {
             try {
                 const token = await TokenModel.getToken();
-                console.log("Token:", token);
                 setIsSignedIn(!!token);
             } catch (error) {
                 console.log(`Erro ao verificar o token: ${error}`);

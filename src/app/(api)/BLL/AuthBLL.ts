@@ -12,6 +12,7 @@ export class AuthBLL {
         if (user && user.getPassword === password) {
             return user;
         }
+
         return null;
     }
 }

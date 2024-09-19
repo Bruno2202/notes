@@ -1,22 +1,17 @@
 import { Text, View, StyleSheet } from "react-native";
+import { Link, router } from "expo-router";
+import { useState } from "react";
+import Toast from "react-native-toast-message";
+
 import { theme } from "@/theme";
+import { UserModel } from "../core/models/UserModel";
+import { UserService } from "../core/services/UserService";
+
 import Input from "../../components/Input";
 import PasswordInput from "../../components/PasswordInput";
 import Button from "../../components/Button";
-import { Link, router } from "expo-router";
-import { useState } from "react";
-import { UserModel } from "../(api)/MODEL/UserModel";
-import { UserController } from "../(api)/CONTROLLER/UserController";
-import Toast from "react-native-toast-message";
-
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
-import * as SQLite from "expo-sqlite"; // Dev tool
-const db = SQLite.openDatabaseSync("notes");// Dev tool
 
 export default function SignUp() {
-
-    useDrizzleStudio(db); // Dev tool
-
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -37,13 +32,21 @@ export default function SignUp() {
             });
         } else {
             const user = new UserModel(name, email, password);
-
-            if (await UserController.validateFields(user)) {
-                router.push({
-                    pathname: '/(auth)/userPic',
-                    params: { name, email, password }
+            try {
+                const isValid = await UserService.validateFields(user);
+            
+                if (isValid) {
+                    router.push({
+                        pathname: '/(auth)/userPic',
+                        params: { name, email, password }
+                    });
+                }
+            } catch (error: any) {
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
                 });
-            };
+            }
         }
     }
 

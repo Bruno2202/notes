@@ -1,5 +1,6 @@
 import { View, TextInput, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+
 import { theme } from "@/theme";
 
 interface InputProps {

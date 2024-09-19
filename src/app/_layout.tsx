@@ -3,14 +3,17 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { View } from "react-native";
-import { theme } from "@/theme";
 import Toast from "react-native-toast-message";
+
+import { theme } from "@/theme";
+
 import UserProvider from "../contexts/UserContext";
 
 SplashScreen.preventAutoHideAsync();
 
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
 import * as SQLite from "expo-sqlite"; // Dev tool
+import NotesProvider from "../contexts/NoteContext";
 const db = SQLite.openDatabaseSync("notes");// Dev tool
 
 export default function Layout() {
@@ -35,41 +38,50 @@ export default function Layout() {
     }
 
     return (
-        <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-            <UserProvider>
-                <Stack>
-                    <Stack.Screen
-                        name="index"
-                        options={{
-                            statusBarTranslucent: true,
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{
-                            statusBarTranslucent: true,
-                            statusBarColor: theme.colorBlack,
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="(auth)"
-                        options={{
-                            statusBarTranslucent: true,
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="(notes)"
-                        options={{
-                            statusBarTranslucent: true,
-                            headerShown: false,
-                        }}
-                    />
-                </Stack>
-                <Toast />
-            </UserProvider>
-        </View>
+        <UserProvider>
+            <NotesProvider>
+                <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
+                    <Stack>
+                        <Stack.Screen
+                            name="index"
+                            options={{
+                                statusBarTranslucent: true,
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="(tabs)"
+                            options={{
+                                statusBarTranslucent: true,
+                                statusBarColor: theme.colorBlack,
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="(auth)"
+                            options={{
+                                statusBarTranslucent: true,
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="(notes)"
+                            options={{
+                                statusBarTranslucent: true,
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="(user)"
+                            options={{
+                                statusBarTranslucent: true,
+                                headerShown: false,
+                            }}
+                        />
+                    </Stack>
+                    <Toast />
+                </View>
+            </NotesProvider>
+        </UserProvider>
     );
 }

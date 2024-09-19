@@ -1,19 +1,20 @@
 import { Text, View, StyleSheet, ImageBackground } from "react-native";
-import { theme } from "@/theme";
-import Input from "../../components/Input";
-import PasswordInput from "../../components/PasswordInput";
-import Button from "../../components/Button";
 import { Href, Link, router } from "expo-router";
-import { useState } from "react";
-import { AuthController } from "../(api)/CONTROLLER/AuthController";
+import { useContext, useState } from "react";
 import Toast from "react-native-toast-message";
 
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
-import * as SQLite from "expo-sqlite"; // Dev tool
-const db = SQLite.openDatabaseSync("notes");// Dev tool
+import { AuthService } from "../core/services/AuthService";
+import { TokenService } from "../core/services/TokenService";
+import { UserModel } from "../core/models/UserModel";
+import { theme } from "@/theme";
+
+import PasswordInput from "../../components/PasswordInput";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import { UserContext } from "@/src/contexts/UserContext";
 
 export default function SignIn() {
-    useDrizzleStudio(db); // Dev tool
+    const { token, setToken } = useContext(UserContext) ?? { token: null, setToken: () => { } };
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -27,22 +28,30 @@ export default function SignIn() {
     }
 
     const navigation = (route: Href) => {
-        router.replace(route);
+        router.replace(route); 
     }
 
     async function handleLogin() {
         try {
-            const result = await AuthController.login(email, password);
+            const result = await AuthService.login(email, password);
+
             if (result) {
-                navigation('/(tabs)/');
+                const token = await TokenService.createToken(result)
+
+                if (token) {
+                    await TokenService.storeToken(token);
+                    setToken(token);
+
+                    navigation('/(tabs)/'); 
+                }
             } else {
                 loginToast();
             }
-        } catch (error) {
-            console.log(`Erro ao fazer login: ${error}`)
+        } catch (error: any) {
+            console.log(`Erro ao fazer login: ${error.message}`);
         }
     }
-
+ 
     return (
         <View style={styles.container}>
             <ImageBackground

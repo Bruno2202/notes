@@ -1,7 +1,9 @@
 import { Text, View, StyleSheet } from "react-native";
-import { theme } from "@/theme";
-import Button from "../../components/Button";
 import { Href, router } from "expo-router";
+
+import { theme } from "@/theme";
+
+import Button from "../../components/Button";
 import Input from "../../components/Input";
 
 export default function UserPic() {

@@ -1,13 +1,16 @@
 import { Text, View, StyleSheet } from "react-native";
-import { theme } from "@/theme";
-import Button from "../../components/Button";
 import { router, useLocalSearchParams } from "expo-router";
-import { UserController } from "../(api)/CONTROLLER/UserController";
-import { UserModel } from "../(api)/MODEL/UserModel";
-import PicInput from "@/src/components/PicInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function UserPic() {
+import { UserService } from "../core/services/UserService";
+import { UserModel } from "../core/models/UserModel";
+import { ImageModel } from "../core/models/ImageModel";
+import { theme } from "@/theme";
+
+import Button from "../../components/Button";
+import PicInput from "@/src/components/PicInput";
+
+export default function UserPic() { 
     const [userPic, setUserPic] = useState<string | null>(null);
     const { name, email, password } = useLocalSearchParams();
 
@@ -17,18 +20,19 @@ export default function UserPic() {
 
     async function createUser(): Promise<void> {
         const user = new UserModel(
-            nameStr, 
-            emailStr, 
-            passwordStr, 
+            nameStr,
+            emailStr,
+            passwordStr,
             undefined,
             userPic ? userPic : null
-        )
+        );
 
-        if (await UserController.registrer(user)) {
+        if (await UserService.register(user)) {
             router.navigate('/');
+            console.log("Usuário criado")
         }
     }
-
+ 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: theme.paddingHorizontal,
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: theme.colorBlack,
+        backgroundColor: theme.colorBlack, 
     },
     title: {
         marginTop: 52,

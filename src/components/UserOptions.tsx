@@ -1,15 +1,23 @@
-import { theme } from '@/theme';
+import { Href, router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+
+import { AuthService } from '../app/core/services/AuthService';
+import { theme } from '@/theme';
+
 import Separator from './Separator';
-import { Href, router } from 'expo-router';
-import { AuthController } from '../app/(api)/CONTROLLER/AuthController';
+import { UserContext } from '../contexts/UserContext';
+import { useContext } from 'react';
 
 export default function UserOptions() {
+
+    const { setUserData } = useContext(UserContext) ?? { setUserData: () => { } };
 
     const navigation = (route: Href) => {
         router.push(route);
     }
+
+
 
     return (
         <View style={styles.optionContainer}>
@@ -21,7 +29,7 @@ export default function UserOptions() {
                 </View>
             </TouchableOpacity>
             <Separator />
-            <TouchableOpacity style={styles.option} onPress={() => console.log("OK")} activeOpacity={0.4}>
+            <TouchableOpacity style={styles.option} onPress={() => router.push('../(user)')} activeOpacity={0.4}>
                 <MaterialIcons name={"settings"} color={theme.colorBlue} size={24} />
                 <Text style={styles.optionText}>Configurações</Text>
                 <View style={styles.optionGo}>
@@ -29,7 +37,14 @@ export default function UserOptions() {
                 </View>
             </TouchableOpacity>
             <Separator />
-            <TouchableOpacity style={styles.option} onPress={() => AuthController.logout()} activeOpacity={0.4}>
+            <TouchableOpacity
+                style={styles.option}
+                onPress={async () => {
+                    await AuthService.logout();
+                    setUserData(null);
+                }}
+                activeOpacity={0.4}
+            >
                 <MaterialIcons name={"logout"} color={theme.colorRed} size={24} />
                 <Text style={styles.optionText}>Sair</Text>
                 <View style={styles.optionGo}>

@@ -1,52 +1,57 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { theme } from "@/theme";
 import { Image } from "expo-image";
 import { useContext, useEffect, useState } from "react";
-import { UserModel } from "../(api)/MODEL/UserModel";
-import { UserController } from "../(api)/CONTROLLER/UserController";
 import { MaterialIcons } from "@expo/vector-icons";
+
+import { theme } from "@/theme";
+import { UserModel } from "../core/models/UserModel";
 import UserOptions from "@/src/components/UserOptions";
-import { ImageModel } from "../(api)/MODEL/ImageModel";
+import { ImageModel } from "../core/models/ImageModel";
 import { UserContext } from "@/src/contexts/UserContext";
+import { UserService } from "../core/services/UserService";
 
 export default function User() {
-    const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => {} };
+    const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
 
     const [newUserPic, setNewUserPic] = useState<string | null>(null);
 
     useEffect(() => {
-        if (newUserPic && userData && newUserPic != null) {
+        if (newUserPic && userData) {
             const newUserData = new UserModel(
                 userData.getName,
-                userData.getEmail,
+                userData.getEmail, 
                 userData.getPassword,
                 userData.getId,
                 newUserPic
             );
-            setNewUserPic(null);
 
             const updateUser = async () => {
-                const updatedUser = await UserController.update(newUserData);
-                setUserData(updatedUser);
+                try {
+                    const updatedUser = await UserService.update(newUserData);
+                    setUserData(updatedUser);
+                } catch (error) {
+                    console.error("Erro ao atualizar o usuário:", error);
+                }
             };
 
-            updateUser();
+            setNewUserPic(null);
+            updateUser(); 
         }
     }, [newUserPic]);
 
     return (
-        <>
+        <> 
             <View style={styles.container}>
                 {(userData) ? (
                     <>
                         <View style={styles.userPicContainer}>
-                            {userData.getUserPic && (
-                                    <Image
-                                        source={{ uri: userData.getUserPic }}
-                                        style={styles.userPic}
-                                    />
-                                )
-                            }
+                            {(typeof(userData.getUserPic) === "string") && (
+                                <Image
+                                    source={{ uri: userData.getUserPic }}
+                                    // source={{ uri: require('../../../assets/images/cat.png') }} 
+                                    style={styles.userPic}
+                                />
+                            )} 
                             <TouchableOpacity
                                 onPress={async () => {
                                     ImageModel.pickImage().then(image => {

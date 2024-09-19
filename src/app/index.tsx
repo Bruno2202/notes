@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Redirect } from 'expo-router';
+
 import { theme } from '@/theme';
-import { TokenModel } from './(api)/MODEL/TokenModel';
+import { TokenService } from './core/services/TokenService';
+import { UserContext } from '../contexts/UserContext';
 
 export default function Page() {
+    const { token, setToken } = useContext(UserContext) ?? { token: undefined, setToken: () => { } };
+    
     const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
 
     useEffect(() => {
         const checkToken = async () => {
             try {
-                const token = await TokenModel.getToken();
+                const token = await TokenService.getToken();
                 setIsSignedIn(!!token);
+
+                if (token) {
+                    setToken(token);
+                }
             } catch (error) {
                 console.log(`Erro ao verificar o token: ${error}`);
                 setIsSignedIn(false);

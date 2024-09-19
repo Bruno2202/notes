@@ -1,8 +1,10 @@
-import { theme } from "@/theme";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import Separator from "./Separator";
 import { Href, router } from "expo-router";
+
+import { theme } from "@/theme";
+
+import Separator from "./Separator";
 
 export default function NotesTypes() {
 

@@ -1,8 +1,10 @@
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { theme } from "@/theme";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+
+import { theme } from "@/theme";
+import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
 
 export default function Layout() {
     return (
@@ -44,6 +46,5 @@ export default function Layout() {
                 />
             </Tabs>
         </View>
-
     );
 }

@@ -1,6 +1,7 @@
-import { theme } from "@/theme";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, Touchable, View, TouchableOpacity } from "react-native";
+
+import { theme } from "@/theme";
 
 export default function PicOption() {
     return (

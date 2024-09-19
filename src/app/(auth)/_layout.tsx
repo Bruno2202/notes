@@ -15,7 +15,7 @@ export default function Layout() {
                 name="signUp"
                 options={{
                     title: "", 
-                    statusBarTranslucent: true,
+                    statusBarTranslucent: true, 
                     headerShown: true,
                     headerStyle: {
                         backgroundColor: theme.colorBlack,

@@ -1,6 +1,7 @@
-import { theme } from "@/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
+
+import { theme } from "@/theme";
 
 interface AddNoteProps {
     onPress: () => void

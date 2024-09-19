@@ -1,5 +1,6 @@
-import { theme } from "@/theme";
 import { StyleSheet, View } from "react-native";
+
+import { theme } from "@/theme";
 
 export default function Separator() {
     return <View style={styles.separator}></View>;

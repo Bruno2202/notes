@@ -1,9 +1,10 @@
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { theme } from "@/theme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image } from "expo-image";
-import { ImageModel } from "../app/(api)/MODEL/ImageModel";
+
+import { ImageModel } from "../app/core/models/ImageModel";
+import { theme } from "@/theme";
 
 interface PicInputProps {
     onImageSelected: (uri: string | null) => void;
@@ -17,17 +18,21 @@ export default function PicInput({ onImageSelected }: PicInputProps) {
             {userPic ? (
                 <TouchableOpacity activeOpacity={0.6} onPress={                        
                     async () => {ImageModel.pickImage().then(image => {
-                        setUserPic(image);
-                        onImageSelected(image);
+                        if (image) {
+                            setUserPic(image);
+                            onImageSelected(image)
+                        }
                     });
                 }}>
-                    <Image source={{ uri: userPic }} style={styles.picture} />
+                    <Image source={{ uri: `data:image/jpeg;base64,${userPic}` }} style={styles.picture} />
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity style={styles.picture} activeOpacity={0.6} onPress={
                     async () => {ImageModel.pickImage().then(image => {
-                        setUserPic(image);
-                        onImageSelected(image)
+                        if (image) {  
+                            setUserPic(image);
+                            onImageSelected(image)
+                        }
                     });
                 }}>
                     <MaterialCommunityIcons name="camera-outline" size={52} color={theme.colorGrey} />
@@ -36,7 +41,7 @@ export default function PicInput({ onImageSelected }: PicInputProps) {
         </View>
     );
 }
-
+ 
 const styles = StyleSheet.create({
     container: {
         marginVertical: 40,

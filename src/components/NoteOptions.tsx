@@ -5,9 +5,32 @@ import { useContext } from "react";
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NoteContext } from "../contexts/NoteContext";
+import { NoteController } from "../app/core/controllers/NoteController";
+import { Href, router } from "expo-router";
 
 export default function NoteOptions() {
-    const { noteOptionsVisible, setNoteOptionsVisible } = useContext(NoteContext) ?? { noteOptionsVisible: false, setNoteOptionsVisible: () => { } };
+    const { 
+        noteOptionsVisible, 
+        setNoteOptionsVisible, 
+        note,
+        setNote
+    } = useContext(NoteContext) ?? { 
+        noteOptionsVisible: false, 
+        setNoteOptionsVisible: () => { },
+        note: null,
+        setNote: () => { }
+    };
+
+    async function deleteNote(id: number) {
+        await NoteController.deleteNote(id);
+        setNote(null);
+        setNoteOptionsVisible(false);
+        navigation('/(tabs)');
+    }
+
+    function navigation(route: Href) {
+		router.navigate(route);
+	}
 
     return (
         noteOptionsVisible && (
@@ -23,11 +46,7 @@ export default function NoteOptions() {
                     />
                 </Pressable>
                 <SafeAreaView style={styles.optionContainer}>
-                    <TouchableOpacity style={styles.option}>
-                        <MaterialIcons name="save" size={20} color={theme.colorGreen} />
-                        <Text style={styles.text}>Salvar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.option}>
+                    <TouchableOpacity style={styles.option} onPress={() => deleteNote(note?.getId!)}>
                         <MaterialIcons name="delete" size={20} color={theme.colorRed} />
                         <Text style={styles.text}>Excluir</Text>
                     </TouchableOpacity>

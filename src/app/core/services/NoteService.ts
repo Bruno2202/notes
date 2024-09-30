@@ -10,7 +10,7 @@ interface NoteTypes {
 }
 
 export class NoteService {
-    static async select() { }
+    // static async select() { }
 
     static async selectById(id: number): Promise<NoteModel | null> {
         try {
@@ -127,5 +127,24 @@ export class NoteService {
         }
     }
 
-    static async delete() { }
+    static async delete(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                return data.deleted;
+            }
+
+            return data.deleted;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
 }

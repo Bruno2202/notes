@@ -5,7 +5,7 @@ interface UserProviderProps {
     children: ReactNode;
 }
 
-interface NoteContextType {
+export interface NoteContextType {
     noteOptionsVisible: boolean;
     setNoteOptionsVisible: React.Dispatch<React.SetStateAction<boolean>>;
     note: NoteModel | null;

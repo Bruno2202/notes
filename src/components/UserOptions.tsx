@@ -17,11 +17,30 @@ export default function UserOptions() {
         router.push(route);
     }
 
+    function timeTest(timeString: Date) { 
+        const time = new Date(timeString);
+
+        const dia = time.getDate()
+        const diaSemana = time.getDay()
+        const mes = time.getMonth()
+        const ano = time.getFullYear() 
+        const dataFormatada = time.toLocaleDateString()
+        const horaFormatada = time.toLocaleTimeString()
+        const hora = time.getHours()
+        const minutos = time.getMinutes()
+        const segundos = time.getSeconds()
+
+
+        console.log(timeString, time, dia, diaSemana, mes, ano, dataFormatada, horaFormatada, hora, minutos, segundos)
+        
+        // const utcDate = new Date(Date.UTC(ano, mes, dia, 23, 37, 47, 895));
+        // console.log(utcDate.toISOString()); // "2024-09-30T23:37:47.895Z"
+    }
 
 
     return (
         <View style={styles.optionContainer}>
-            <TouchableOpacity style={styles.option} onPress={() => console.log("OK")} activeOpacity={0.4}>
+            <TouchableOpacity style={styles.option} onPress={() => timeTest(new Date())} activeOpacity={0.4}>
                 <MaterialIcons name={"edit"} color={theme.colorBlue} size={24} />
                 <Text style={styles.optionText}>Editar perfil</Text>
                 <View style={styles.optionGo}>

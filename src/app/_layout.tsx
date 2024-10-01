@@ -8,17 +8,11 @@ import Toast from "react-native-toast-message";
 import { theme } from "@/theme";
 
 import UserProvider from "../contexts/UserContext";
+import NotesProvider from "../contexts/NoteContext";
 
 SplashScreen.preventAutoHideAsync();
 
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin"; // Dev tool
-import * as SQLite from "expo-sqlite"; // Dev tool
-import NotesProvider from "../contexts/NoteContext";
-const db = SQLite.openDatabaseSync("notes");// Dev tool
-
 export default function Layout() {
-    useDrizzleStudio(db); // Dev tool
-
     const [loaded, error] = useFonts({
         'fontFamilyBold': require('../../assets/fonts/PlusJakartaSans-Bold.ttf'),
         'fontFamilySemiBold': require('../../assets/fonts/PlusJakartaSans-SemiBold.ttf'),

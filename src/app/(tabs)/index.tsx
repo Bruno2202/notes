@@ -1,20 +1,18 @@
-import { Text, View, StyleSheet, FlatList, ScrollView } from "react-native";
+import { Text, View, StyleSheet, FlatList } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Image } from "expo-image";
 import { Href, router, useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteContext } from "@/src/contexts/NoteContext";
-import { NoteService } from "../core/services/NoteService";
 import { NoteModel } from "../core/models/NoteModel";
 
 import SearchBar from "@/src/components/SearchBar";
 import AddNote from "@/src/components/AddNote";
 import NotePreview from "@/src/components/NotePreview";
-import Toast from "react-native-toast-message";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { NoteController } from "../core/controllers/NoteController";
+import TabBarGradient from "@/src/components/TabBarGradient";
+import NotFoundCat from "@/src/components/NotFoundCat";
 
 export default function Index() {
 	const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
@@ -25,29 +23,23 @@ export default function Index() {
 
 	const [notes, setNotes] = useState<NoteModel[] | null>(null);
 
-	// Salvamento de nota após foco da tela
 	useFocusEffect(
 		useCallback(() => {
-			if (note) {
-				if (note.getTitle != "" || note.getContent != "") {
-					if (note?.getId) {
+			if (userData && note) {
+				if (note.getTitle || note.getContent) {
+					if (note.getId) {
 						NoteController.updateNote(note);
-						setNote(null);
-						fetchNotes();
-
-						return;
+					} else {
+						NoteController.createNote(userData, note);
 					}
-					
-					NoteController.createNote(userData!, note);
 					setNote(null);
 				}
-			}
 
-			fetchNotes();
+				fetchNotes();
+			}
 		}, [note, userData])
 	);
-
-	// Buscar notas após acessar tela
+	
 	useEffect(() => {
 		if (userData) {
 			fetchNotes();
@@ -65,6 +57,7 @@ export default function Index() {
 
 	return (
 		<View style={styles.container}>
+
 			<View style={styles.saluation}>
 				{userData &&
 					<Text style={styles.saluationText}>
@@ -77,22 +70,28 @@ export default function Index() {
 			<View style={styles.searchBarContainer}>
 				<SearchBar />
 			</View>
-			<FlatList
-				data={notes}
-				style={styles.notesContainer}
-				keyExtractor={(item) => item.getId!.toString()}
-				renderItem={({ item }) => {
-					if (item) {
-						return (
-							<NotePreview
-								noteData={item}
-							/>
-						);
-					} else {
-						return null;
-					}
-				}}
-			/>
+			{notes !== null ? (
+				<FlatList
+					data={notes}
+					style={styles.notesContainer}
+					keyExtractor={(item) => item.getId!.toString()}
+					renderItem={({ item }) => {
+						if (item) {
+							return (
+								<NotePreview
+									noteData={item}
+								/>
+							);
+						} else {
+							return null;
+						}
+					}}
+					contentContainerStyle={{ paddingBottom: 100 }}
+				/>
+			) : (
+				<NotFoundCat />
+			)}
+			<TabBarGradient />
 			<AddNote onPress={() => navigation('/(notes)')} />
 		</View>
 	);
@@ -119,5 +118,5 @@ const styles = StyleSheet.create({
 	},
 	notesContainer: {
 		width: '100%',
-	}
+	},
 });

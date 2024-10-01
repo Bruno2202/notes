@@ -9,6 +9,8 @@ import UserOptions from "@/src/components/UserOptions";
 import { ImageModel } from "../core/models/ImageModel";
 import { UserContext } from "@/src/contexts/UserContext";
 import { UserService } from "../core/services/UserService";
+import TabBarGradient from "@/src/components/TabBarGradient";
+import FeedPostsFooter from "@/src/components/FooterCredits";
 
 export default function User() {
     const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
@@ -79,7 +81,11 @@ export default function User() {
                     <>
                     </>
                 )}
+                <View style={styles.credits}>
+                    <FeedPostsFooter />
+                </View>
             </View>
+            <TabBarGradient />
         </>
     );
 }
@@ -155,5 +161,8 @@ const styles = StyleSheet.create({
         borderBottomColor: theme.colorGrey,
         borderBottomWidth: 1.6,
         opacity: 0.1,
+    },
+    credits: {
+        marginTop: 12,
     }
 });

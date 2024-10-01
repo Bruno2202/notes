@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 
 import { theme } from "@/theme";
 import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Layout() {
     return (
@@ -15,7 +16,7 @@ export default function Layout() {
             <Tabs
                 screenOptions={{
                     tabBarStyle: {
-                        backgroundColor: theme.colorDarkGrey,
+                        backgroundColor: "#000000",
                         shadowColor: "#000000",
                         borderTopWidth: 0,
                     },

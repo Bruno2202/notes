@@ -5,7 +5,6 @@ import { Href, router } from "expo-router";
 import { NoteContext } from "../contexts/NoteContext";
 import { useContext } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
-import { Timestamp } from "react-native-reanimated/lib/typescript/reanimated2/commonTypes";
 
 interface PropTypes {
     noteData: NoteModel;
@@ -25,32 +24,26 @@ export default function NotePreview({ noteData }: PropTypes) {
         navigation("/(notes)/note");
     }
 
-    // function handleCreationDateNote(timestamp: Date): string {
-    //     const now = new Date();
-    //     const createdDate = new Date(timestamp);
-    //     const diffInMillis = now.getTime() - createdDate.getTime(); // Diferença em milissegundos
+    function handleNoteCreationDate(timestamp: Date): string {
+        const now = new Date();
+        const createdDate = new Date(timestamp);
+        const diffInMillis = now.getTime() - createdDate.getTime();
 
-    //     const diffInMinutes = Math.floor(diffInMillis / (1000 * 60)); // Diferença em minutos
-    //     const diffInHours = Math.floor(diffInMinutes / 60); // Diferença em horas
+        const diffInMinutes = Math.floor(diffInMillis / (1000 * 60));
+        const diffInHours = Math.floor(diffInMinutes / 60);
 
-    //     if (diffInMillis < 24 * 60 * 60 * 1000) { // Menos de 24 horas
-    //         if (diffInHours > 0) {
-    //             return `Há ${diffInHours} ${diffInHours === 1 ? 'hora' : 'horas'} atrás`;
-    //         }
-    //         return `Há ${diffInMinutes} ${diffInMinutes === 1 ? 'minuto' : 'minutos'} atrás`;
-    //     }
+        if (diffInMillis < 24 * 60 * 60 * 1000) {
+            if (diffInHours > 0) {
+                return `Há ${diffInHours} ${diffInHours === 1 ? 'hora' : 'horas'}`;
+            }
+            return `Há ${diffInMinutes} ${diffInMinutes === 1 ? 'minuto' : 'minutos'}`;
+        }
 
-    //     // Formato DD/MM/YYYY
-    //     const day = String(createdDate.getDate()).padStart(2, '0');
-    //     const month = String(createdDate.getMonth() + 1).padStart(2, '0'); // Meses começam do 0
-    //     const year = createdDate.getFullYear();
+        const day = String(createdDate.getDate()).padStart(2, '0');
+        const month = String(createdDate.getMonth() + 1).padStart(2, '0');
+        const year = createdDate.getFullYear();
 
-    //     return `${day}/${month}/${year}`;
-    // }
-
-    function timeTest(date: Date): string {
-        console.log(date, new Date(date).getMinutes(), new Date(date).getSeconds())
-        return "TESTANDO"
+        return `${day}/${month}/${year}`;
     }
 
     return (
@@ -66,8 +59,8 @@ export default function NotePreview({ noteData }: PropTypes) {
                         {noteData.getContent} 
                     </Text> 
                 }
-                <Text style={styles.data}>
-                    {timeTest(noteData.getCreationDate)}
+                <Text style={styles.date}>
+                    {handleNoteCreationDate(noteData.getCreationDate)}
                 </Text>
             </View>
         </TouchableOpacity>
@@ -93,9 +86,9 @@ const styles = StyleSheet.create({
         fontFamily: 'fontFamilyRegular',
         color: theme.colorGrey,
     },
-    data: {
+    date: {
         textAlign: 'right',
-        marginTop: 4,
+        marginTop: 8,
         fontSize: 10,
         fontFamily: 'fontFamilyRegular',
         color: theme.colorGrey,

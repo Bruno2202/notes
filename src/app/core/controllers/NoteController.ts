@@ -5,31 +5,30 @@ import { UserModel } from "../models/UserModel";
 
 export class NoteController {
 	static async createNote(user: UserModel, note: NoteModel) {
-		console.log(new Date().toLocaleString())
-		// try {
-		// 	await NoteService.create(
-		// 		new NoteModel(
-		// 			user?.getId!,
-		// 			1,
-		// 			new Date(),
-		// 			undefined,
-		// 			note?.getTitle,
-		// 			note?.getContent,
-		// 		)
-		// 	);
+		try {
+			await NoteService.create(
+				new NoteModel(
+					user?.getId!,
+					1,
+					new Date(),
+					undefined,
+					note?.getTitle,
+					note?.getContent,
+				)
+			);
 
 
-		// 	Toast.show({
-		// 		type: 'success',
-		// 		text1: 'Nota salva com sucesso!',
-		// 	});
-		// } catch (error: any) {
-		// 	console.log(`Erro ao criar nota: ${error.message}`);
-		// 	Toast.show({
-		// 		type: 'error',
-		// 		text1: 'Não foi possível salvar nota',
-		// 	});
-		// }
+			Toast.show({
+				type: 'success',
+				text1: 'Nota salva com sucesso!',
+			});
+		} catch (error: any) {
+			console.log(`Erro ao criar nota: ${error.message}`);
+			Toast.show({
+				type: 'error',
+				text1: 'Não foi possível salvar nota',
+			});
+		}
 	}
 
 	static async fetchNotes(user: UserModel): Promise<NoteModel[] | null> {
@@ -45,7 +44,7 @@ export class NoteController {
 			switch (error.message) {
 				case 'Notas não encontradas':
 					console.log("O usuário não possui notas");
-					break;
+					return null;
 
 				default:
 					console.log(`Erro ao buscar notas: ${error.message}`);

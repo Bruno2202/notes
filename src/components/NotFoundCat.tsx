@@ -23,16 +23,17 @@ const styles = StyleSheet.create({
     container: {
         opacity: 0.6,
         alignItems: 'center',
-        top: 40,
+        top: 80,
         flex: 1,
     },
     text: {
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorGrey,
+        
         textAlign: 'center',
     },
 	notFoundCat: {
-		width: 200,
-		height: 200,
+		width: 160,
+		height: 160,
 	}
 });

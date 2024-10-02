@@ -8,10 +8,12 @@ import { theme } from '@/theme';
 import Separator from './Separator';
 import { UserContext } from '../contexts/UserContext';
 import { useContext } from 'react';
+import { NoteContext } from '../contexts/NoteContext';
 
 export default function UserOptions() {
 
     const { setUserData } = useContext(UserContext) ?? { setUserData: () => { } };
+    const { setNotes } = useContext(NoteContext) ?? { setNotes: () => { } };
 
     const navigation = (route: Href) => {
         router.push(route);
@@ -40,6 +42,7 @@ export default function UserOptions() {
                 onPress={async () => {
                     await AuthService.logout();
                     setUserData(null);
+                    setNotes(null);
                 }}
                 activeOpacity={0.4}
             >

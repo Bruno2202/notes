@@ -73,7 +73,7 @@ export class NoteController {
 	static async deleteNote(id: number) {
 		try {
 			const deleted = await NoteService.delete(id);
-
+			
 			if (deleted) {
 				Toast.show({
 					type: 'success',

@@ -36,16 +36,12 @@ export default function Index() {
 				}
 
 				fetchNotes();
+			} else if (userData) {
+				fetchNotes();
 			}
 		}, [note, userData])
 	);
 	
-	useEffect(() => {
-		if (userData) {
-			fetchNotes();
-		}
-	}, [userData]);
-
 	function navigation(route: Href) {
 		router.navigate(route);
 	}
@@ -57,7 +53,6 @@ export default function Index() {
 
 	return (
 		<View style={styles.container}>
-
 			<View style={styles.saluation}>
 				{userData &&
 					<Text style={styles.saluationText}>
@@ -91,23 +86,24 @@ export default function Index() {
 			) : (
 				<NotFoundCat />
 			)}
-			<TabBarGradient />
+			{/* <TabBarGradient /> */}
 			<AddNote onPress={() => navigation('/(notes)')} />
 		</View>
 	);
-}
+}  
 
 const styles = StyleSheet.create({
 	container: {
-		paddingHorizontal: theme.paddingHorizontal,
 		flex: 1,
 		backgroundColor: theme.colorBlack,
 		marginTop: theme.statusBarHeight,
 	},
 	saluation: {
+		paddingHorizontal: theme.paddingHorizontal,
 		marginTop: 60,
 	},
 	searchBarContainer: {
+		paddingHorizontal: theme.paddingHorizontal,
 		marginTop: 20,
 		marginBottom: 40,
 	},
@@ -117,6 +113,7 @@ const styles = StyleSheet.create({
 		fontSize: 40,
 	},
 	notesContainer: {
+		paddingHorizontal: theme.paddingHorizontal,
 		width: '100%',
 	},
 });

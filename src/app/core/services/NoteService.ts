@@ -135,16 +135,21 @@ export class NoteService {
                     'Content-Type': 'application/json',
                 },
             });
-
+            
             const data = await response.json();
 
+            console.log(data)
+    
             if (response.ok) {
-                return data.deleted;
+                return data.deleted
             }
-
-            return data.deleted;
+    
+            console.error(`Erro ao deletar nota: ${data.message || 'Resposta inesperada'}`);
+            return false;
         } catch (error: any) {
+            console.error(`Erro ao deletar nota: ${error.message}`);
             throw new Error(error.message);
         }
     }
+    
 }

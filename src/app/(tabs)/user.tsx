@@ -85,7 +85,6 @@ export default function User() {
                     <FeedPostsFooter />
                 </View>
             </View>
-            <TabBarGradient />
         </>
     );
 }

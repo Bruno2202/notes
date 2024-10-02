@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
     },
-    content: {
+    content: { 
         fontSize: 14,
         fontFamily: 'fontFamilyRegular',
         color: theme.colorGrey,

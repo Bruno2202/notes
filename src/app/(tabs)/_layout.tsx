@@ -17,11 +17,11 @@ export default function Layout() {
             <Tabs
                 screenOptions={{
                     tabBarStyle: {
-                        position: 'absolute', // Torna a tabBar sobreposta ao conteúdo
-                        backgroundColor: 'transparent', // Deixa a tabBar transparente
-                        shadowColor: 'transparent', // Remove sombras
+                        position: 'absolute',
+                        backgroundColor: 'transparent',
+                        shadowColor: 'transparent',
                         borderTopWidth: 0,
-                        bottom: 0, // Define a posição no rodapé
+                        bottom: 0,
                         left: 0,
                         right: 0,
                         zIndex: 99
@@ -42,23 +42,13 @@ export default function Layout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="add"
+                    name="addNote"
                     options={{
                         tabBarShowLabel: false,
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => {
                             return <MaterialIcons name="add-box" size={size} color={color} />;
-                        },
-                        // tabBarButton: (props) => (
-                        //     <TouchableOpacity
-                        //         {...props}
-                        //         onPress={() => {
-                        //             // Sua função personalizada aqui
-                        //             console.log("Botão do meio pressionado!");
-                        //             // Você pode chamar qualquer função ou executar uma ação
-                        //         }}
-                        //     />
-                        // ),
+                        }
                     }}
                 />
                 <Tabs.Screen

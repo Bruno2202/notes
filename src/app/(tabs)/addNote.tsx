@@ -21,6 +21,7 @@ export default function Types() {
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 60,
         flex: 1,
         backgroundColor: theme.colorBlack,
 		paddingHorizontal: theme.paddingHorizontal,

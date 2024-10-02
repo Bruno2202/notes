@@ -2,8 +2,8 @@ import { View, StyleSheet, TextInput } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
-import { NoteModel } from "../core/models/NoteModel";
 import { UserContext } from "@/src/contexts/UserContext";
+import { NoteModel } from "../core/models/NoteModel";
 
 export default function CreateNote() {
     const [title, setTitle] = useState<string>("");
@@ -25,16 +25,18 @@ export default function CreateNote() {
     }, [note]);
 
     useEffect(() => {
-        const newNote = new NoteModel(
-            userData?.getId!,
-            1,
-            note ? note.getCreationDate : new Date(),
-            noteId ? noteId : undefined,
-            title,
-            content,
-        );
-
-        setNote(newNote);
+        if (title || content) {
+            const newNote = new NoteModel(
+                userData?.getId!,
+                1,
+                note ? note.getCreationDate : new Date(),
+                noteId ? noteId : undefined,
+                title,
+                content,
+            );
+    
+            setNote(newNote);
+        }
     }, [userData, title, content]);
 
     return (

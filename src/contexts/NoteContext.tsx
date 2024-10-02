@@ -10,6 +10,8 @@ export interface NoteContextType {
     setNoteOptionsVisible: React.Dispatch<React.SetStateAction<boolean>>;
     note: NoteModel | null;
     setNote:  React.Dispatch<React.SetStateAction<NoteModel | null>>;
+    notes: NoteModel[] | null;
+    setNotes:  React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -17,13 +19,16 @@ export const NoteContext = createContext<NoteContextType | null>(null);
 export default function NotesProvider({ children }: UserProviderProps) {
     const [noteOptionsVisible, setNoteOptionsVisible] = useState<boolean>(false);
     const [note, setNote] = useState<NoteModel | null>(null);
+    const [notes, setNotes] = useState<NoteModel[] | null>(null);
 
     return (
         <NoteContext.Provider value={{
             noteOptionsVisible,
             setNoteOptionsVisible,
             note,
-            setNote
+            setNote,
+            notes,
+            setNotes
         }}>
             {children}
         </NoteContext.Provider>

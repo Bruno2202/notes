@@ -8,20 +8,18 @@ import { NoteContext } from "@/src/contexts/NoteContext";
 import { NoteModel } from "../core/models/NoteModel";
 
 import SearchBar from "@/src/components/SearchBar";
-import AddNote from "@/src/components/AddNote";
 import NotePreview from "@/src/components/NotePreview";
 import { NoteController } from "../core/controllers/NoteController";
-import TabBarGradient from "@/src/components/TabBarGradient";
 import NotFoundCat from "@/src/components/NotFoundCat";
 
 export default function Index() {
 	const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
-	const { note, setNote } = useContext(NoteContext) ?? {
+	const { note, setNote, notes, setNotes } = useContext(NoteContext) ?? {
 		note: null,
-		setNote: () => { }
+		setNote: () => { },
+		notes: null,
+		setNotes: () => { },
 	};
-
-	const [notes, setNotes] = useState<NoteModel[] | null>(null);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -42,10 +40,6 @@ export default function Index() {
 		}, [note, userData])
 	);
 	
-	function navigation(route: Href) {
-		router.navigate(route);
-	}
-
 	async function fetchNotes() {
 		const notes = await NoteController.fetchNotes(userData!);
 		setNotes(notes);
@@ -81,13 +75,11 @@ export default function Index() {
 							return null;
 						}
 					}}
-					contentContainerStyle={{ paddingBottom: 100 }}
+					contentContainerStyle={{ paddingBottom: 120 }}
 				/>
 			) : (
 				<NotFoundCat />
 			)}
-			{/* <TabBarGradient /> */}
-			<AddNote onPress={() => navigation('/(notes)')} />
 		</View>
 	);
 }  

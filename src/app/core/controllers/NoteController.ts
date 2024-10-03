@@ -43,7 +43,6 @@ export class NoteController {
 		} catch (error: any) {
 			switch (error.message) {
 				case 'Notas não encontradas':
-					console.log("O usuário não possui notas");
 					return null;
 
 				default:

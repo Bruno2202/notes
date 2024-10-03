@@ -50,7 +50,6 @@ export default function User() {
                             {(typeof(userData.getUserPic) === "string") && (
                                 <Image
                                     source={{ uri: userData.getUserPic }}
-                                    // source={{ uri: require('../../../assets/images/cat.png') }} 
                                     style={styles.userPic}
                                 />
                             )} 
@@ -81,9 +80,6 @@ export default function User() {
                     <>
                     </>
                 )}
-                <View style={styles.credits}>
-                    <FeedPostsFooter />
-                </View>
             </View>
         </>
     );
@@ -161,7 +157,4 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1.6,
         opacity: 0.1,
     },
-    credits: {
-        marginTop: 12,
-    }
 });

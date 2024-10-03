@@ -66,7 +66,7 @@ export default function Layout() {
                             }}
                         />
                         <Stack.Screen
-                            name="(user)"
+                            name="(settings)"
                             options={{
                                 statusBarTranslucent: true,
                                 headerShown: false,

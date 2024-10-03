@@ -25,7 +25,19 @@ export default function Layout() {
                         },
                     }}
                 />
-
+                <Stack.Screen
+                    name="info"
+                    options={{
+                        statusBarTranslucent: true,
+                        headerShown: true,
+                        title: '',
+                        headerTintColor: theme.colorWhite,
+                        headerShadowVisible: false,
+                        headerStyle: {
+                            backgroundColor: theme.colorBlack,
+                        },
+                    }}
+                />
             </Stack>
         </View>
 

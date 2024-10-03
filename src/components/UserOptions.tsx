@@ -1,5 +1,5 @@
 import { Href, router } from 'expo-router';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 
 import { AuthService } from '../app/core/services/AuthService';
@@ -9,6 +9,7 @@ import Separator from './Separator';
 import { UserContext } from '../contexts/UserContext';
 import { useContext } from 'react';
 import { NoteContext } from '../contexts/NoteContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function UserOptions() {
 
@@ -19,54 +20,94 @@ export default function UserOptions() {
         router.push(route);
     }
 
-    return (
-        <View style={styles.optionContainer}>
-            <TouchableOpacity style={styles.option} onPress={() => console.log("OK")} activeOpacity={0.4}>
-                <MaterialIcons name={"edit"} color={theme.colorBlue} size={24} />
-                <Text style={styles.optionText}>Editar perfil</Text>
-                <View style={styles.optionGo}>
-                    <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
-                </View>
-            </TouchableOpacity>
-            <Separator />
-            <TouchableOpacity style={styles.option} onPress={() => router.push('../(user)')} activeOpacity={0.4}>
-                <MaterialIcons name={"settings"} color={theme.colorBlue} size={24} />
-                <Text style={styles.optionText}>Configurações</Text>
-                <View style={styles.optionGo}>
-                    <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
-                </View>
-            </TouchableOpacity>
-            <Separator />
+    interface OptionsTypes {
+        description: string;
+        iconName: any;
+        iconType: string;
+        colorBackgroundGradient: string[];
+        onPress: () => void;
+        showSwitch: boolean;
+    }
+    
+    function Option({ description, iconName, iconType, colorBackgroundGradient, onPress, showSwitch }: OptionsTypes) {
+        return (
             <TouchableOpacity
-                style={styles.option}
+                style={styles.optionContainer}
+                onPress={onPress}
+                activeOpacity={0.4}
+            >
+                <LinearGradient
+                    style={styles.optionIconBackground}
+                    colors={colorBackgroundGradient}
+                >
+                    {iconType == 'MaterialIcons' ?
+                        <MaterialIcons name={iconName} color={theme.colorWhite} size={24} />
+                        : iconType == 'MaterialCommunityIcons' &&
+                        <MaterialCommunityIcons name={iconName} color={theme.colorWhite} size={24} />
+                    }
+                </LinearGradient>
+                <Text style={styles.optionText}>{description}</Text>
+                <View style={styles.optionGo}>
+                    <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
+                </View>
+            </TouchableOpacity>
+        );
+    }
+    
+
+    return (
+        <View style={styles.container}>
+            <Option
+                description="Configurações"
+                iconType="MaterialIcons"
+                iconName="settings"
+                colorBackgroundGradient={['#1A94F7', '#1A38D3']}
+                onPress={() => navigation('../(settings)')}
+                showSwitch={false}
+            />
+            <Separator />
+            <Option
+                description="Editar perfil"
+                iconType="MaterialIcons"
+                iconName="edit"
+                colorBackgroundGradient={['#1A94F7', '#1A38D3']}
+                onPress={() => console.log()}
+                showSwitch={false}
+            />
+            <Separator />
+            <Option
+                description="Sair"
+                iconType="MaterialIcons"
+                iconName="logout"
+                colorBackgroundGradient={['#BF3C3C', '#662020']}
                 onPress={async () => {
                     await AuthService.logout();
                     setUserData(null);
                     setNotes(null);
                 }}
-                activeOpacity={0.4}
-            >
-                <MaterialIcons name={"logout"} color={theme.colorRed} size={24} />
-                <Text style={styles.optionText}>Sair</Text>
-                <View style={styles.optionGo}>
-                    <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
-                </View>
-            </TouchableOpacity>
+                showSwitch={false}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    optionContainer: {
+    container: {
         width: '100%',
         backgroundColor: theme.colorDarkGrey,
         borderRadius: 8,
     },
-    option: {
+    optionContainer: {
         paddingHorizontal: 16,
-        paddingVertical: 16,
+        paddingVertical: 12,
         alignItems: 'center',
         flexDirection: 'row',
+    },
+    optionIconBackground: {
+        padding: 4,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     optionText: {
         marginLeft: 16,

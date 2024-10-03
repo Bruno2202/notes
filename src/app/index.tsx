@@ -7,14 +7,15 @@ import { TokenService } from './core/services/TokenService';
 import { UserContext } from '../contexts/UserContext';
 
 export default function Page() {
-    const { token, setToken } = useContext(UserContext) ?? { token: undefined, setToken: () => { } };
-    
     const [isSignedIn, setIsSignedIn] = useState<boolean | null>(null);
+
+    const { setToken } = useContext(UserContext) ?? { setToken: () => { } };
 
     useEffect(() => {
         const checkToken = async () => {
             try {
                 const token = await TokenService.getToken();
+
                 setIsSignedIn(!!token);
 
                 if (token) {

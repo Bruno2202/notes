@@ -6,6 +6,11 @@ import { theme } from '@/theme';
 import Separator from './Separator';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Href, router } from 'expo-router';
+import { UserService } from '../app/core/services/UserService';
+import { UserContext } from '../contexts/UserContext';
+import { useContext } from 'react';
+import { UserModel } from '../app/core/models/UserModel';
+import Toast from 'react-native-toast-message';
 
 interface OptionsTypes {
     description: string;
@@ -18,6 +23,23 @@ interface OptionsTypes {
 
 const navigation = (route: Href) => {
     router.push(route);
+}
+
+async function deleteUser(userData: UserModel) {
+    try {
+        await UserService.delete(userData.getId!)
+
+        Toast.show({
+            type: 'success',
+            text1: 'Usuário excluido com sucesso!',
+        });
+    } catch (error: any) {
+        console.log(`Erro ao excluir usuário: ${error.message}`);
+        Toast.show({
+            type: 'error',
+            text1: 'Não foi possível excluir o usuário',
+        });
+    }
 }
 
 function Option({ description, iconName, iconType, colorBackgroundGradient, onPress, showSwitch }: OptionsTypes) {
@@ -56,6 +78,8 @@ function Option({ description, iconName, iconType, colorBackgroundGradient, onPr
 }
 
 export default function SettingsOptions() {
+    const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
+
     return (
         <View style={styles.container}>
             <Option
@@ -90,7 +114,7 @@ export default function SettingsOptions() {
                 iconType="MaterialCommunityIcons"
                 iconName="delete-forever"
                 colorBackgroundGradient={['#BF3C3C', '#662020']}
-                onPress={() => console.log("")}
+                onPress={async () => deleteUser(userData!)}
                 showSwitch={false}
             />
         </View>

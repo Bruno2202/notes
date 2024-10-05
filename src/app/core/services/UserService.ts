@@ -93,7 +93,7 @@ export class UserService {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -123,7 +123,32 @@ export class UserService {
 
             throw new Error(data.error);
         } catch (error: any) {
-            throw new Error(error.message); 
+            throw new Error(error.message);
+        }
+    }
+
+    static async delete(id: number): Promise<boolean> {
+        try {
+            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            console.log(data)
+
+            if (response.ok) {
+                return data.deleted
+            }
+
+            console.error(`Erro ao deletar usuário: ${data.message}`);
+            return false;
+        } catch (error: any) {
+            console.error(`Erro ao deletar usuário: ${error.message}`);
+            throw new Error(error.message);
         }
     }
 }

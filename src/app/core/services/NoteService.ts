@@ -144,12 +144,11 @@ export class NoteService {
                 return data.deleted
             }
     
-            console.error(`Erro ao deletar nota: ${data.message || 'Resposta inesperada'}`);
+            console.error(`Erro ao deletar nota: ${data.message}`);
             return false;
         } catch (error: any) {
             console.error(`Erro ao deletar nota: ${error.message}`);
             throw new Error(error.message);
         }
     }
-    
 }

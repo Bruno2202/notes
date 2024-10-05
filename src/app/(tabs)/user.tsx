@@ -11,6 +11,7 @@ import { UserContext } from "@/src/contexts/UserContext";
 import { UserService } from "../core/services/UserService";
 import TabBarGradient from "@/src/components/TabBarGradient";
 import FeedPostsFooter from "@/src/components/FooterCredits";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function User() {
     const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
@@ -61,9 +62,11 @@ export default function User() {
                                 }}
                                 activeOpacity={0.4}
                             >
-                                <View style={styles.editIconContainer}>
+                                <LinearGradient 
+                                    colors={['#1A94F7', '#1A38D3']}
+                                    style={styles.editIconContainer}>
                                     <MaterialIcons name="edit" color={theme.colorWhite} size={24} />
-                                </View>
+                                </LinearGradient>
                             </TouchableOpacity>
                         </View>
                         <Text style={styles.username}>

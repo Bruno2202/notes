@@ -1,15 +1,14 @@
 import { Text, View, StyleSheet, FlatList } from "react-native";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Href, router, useFocusEffect } from "expo-router";
+import { useCallback, useContext } from "react";
+import { useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteContext } from "@/src/contexts/NoteContext";
-import { NoteModel } from "../core/models/NoteModel";
+import { NoteController } from "../../core/controllers/NoteController";
 
 import SearchBar from "@/src/components/SearchBar";
 import NotePreview from "@/src/components/NotePreview";
-import { NoteController } from "../core/controllers/NoteController";
 import NotFoundCat from "@/src/components/NotFoundCat";
 
 export default function Index() {
@@ -88,11 +87,9 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: theme.colorBlack,
-		marginTop: theme.statusBarHeight,
 	},
 	saluation: {
 		paddingHorizontal: theme.paddingHorizontal,
-		marginTop: 60,
 	},
 	searchBarContainer: {
 		paddingHorizontal: theme.paddingHorizontal,

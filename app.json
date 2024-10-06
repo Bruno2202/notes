@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#111111"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.couty.notes"
     },
     "web": {
       "bundler": "metro",
@@ -33,12 +37,24 @@
         "expo-image-picker",
         {
           "photosPermission": "Allow Notes to access your photos",
-          "cameraPermission": 	"Allow Notes to access your camera"
+          "cameraPermission": "Allow Notes to access your camera"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1d3d39f2-ae32-41a5-99ad-6e351075df9a"
+      }
+    },
+    "owner": "couty",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/1d3d39f2-ae32-41a5-99ad-6e351075df9a"
     }
   }
 }

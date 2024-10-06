@@ -9,6 +9,7 @@ import { theme } from "@/theme";
 
 import UserProvider from "../contexts/UserContext";
 import NotesProvider from "../contexts/NoteContext";
+import AppInfoProvider from "../contexts/AppInfoContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,47 +35,49 @@ export default function Layout() {
     return (
         <UserProvider>
             <NotesProvider>
-                <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-                    <Stack>
-                        <Stack.Screen
-                            name="index"
-                            options={{
-                                statusBarTranslucent: true,
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="(tabs)"
-                            options={{
-                                statusBarTranslucent: true,
-                                statusBarColor: theme.colorBlack,
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="(auth)"
-                            options={{
-                                statusBarTranslucent: true,
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="(notes)"
-                            options={{
-                                statusBarTranslucent: true,
-                                headerShown: false,
-                            }}
-                        />
-                        <Stack.Screen
-                            name="(settings)"
-                            options={{
-                                statusBarTranslucent: true,
-                                headerShown: false,
-                            }}
-                        />
-                    </Stack>
-                    <Toast />
-                </View>
+                <AppInfoProvider>
+                    <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
+                        <Stack>
+                            <Stack.Screen
+                                name="index"
+                                options={{
+                                    statusBarTranslucent: true,
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(tabs)"
+                                options={{
+                                    statusBarTranslucent: true,
+                                    statusBarColor: theme.colorBlack,
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(auth)"
+                                options={{
+                                    statusBarTranslucent: true,
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(notes)"
+                                options={{
+                                    statusBarTranslucent: true,
+                                    headerShown: false,
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(settings)"
+                                options={{
+                                    statusBarTranslucent: true,
+                                    headerShown: false,
+                                }}
+                            />
+                        </Stack>
+                        <Toast />
+                    </View>
+                </AppInfoProvider>
             </NotesProvider>
         </UserProvider>
     );

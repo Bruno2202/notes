@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
+import { MarkerModel } from "../app/core/models/MarkerModel";
 
 interface UserProviderProps {
     children: ReactNode;
@@ -12,6 +13,8 @@ export interface NoteContextType {
     setNote:  React.Dispatch<React.SetStateAction<NoteModel | null>>;
     notes: NoteModel[] | null;
     setNotes:  React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
+    markers: MarkerModel[] | null;
+    setMarkers:  React.Dispatch<React.SetStateAction<MarkerModel[] | null>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -20,6 +23,7 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [noteOptionsVisible, setNoteOptionsVisible] = useState<boolean>(false);
     const [note, setNote] = useState<NoteModel | null>(null);
     const [notes, setNotes] = useState<NoteModel[] | null>(null);
+    const [markers, setMarkers] = useState<MarkerModel[] | null>(null);
 
     return (
         <NoteContext.Provider value={{
@@ -28,7 +32,9 @@ export default function NotesProvider({ children }: UserProviderProps) {
             note,
             setNote,
             notes,
-            setNotes
+            setNotes,
+            markers,
+            setMarkers
         }}>
             {children}
         </NoteContext.Provider>

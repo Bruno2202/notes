@@ -1,11 +1,9 @@
-import { Stack, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { theme } from "@/theme";
-import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
-import { LinearGradient } from "expo-linear-gradient";
 import TabBarGradient from "@/src/components/TabBarGradient";
 
 export default function Layout() {
@@ -24,7 +22,7 @@ export default function Layout() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        zIndex: 99
+                        zIndex: 999
                     },
                     tabBarActiveTintColor: theme.colorWhite,
                     tabBarInactiveTintColor: theme.colorGrey,
@@ -32,7 +30,7 @@ export default function Layout() {
                 }}
             >
                 <Tabs.Screen
-                    name="index"
+                    name="(drawer)"
                     options={{
                         tabBarShowLabel: false,
                         headerShown: false,

@@ -18,6 +18,5 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 140,
-        zIndex: 1,
     },
 });

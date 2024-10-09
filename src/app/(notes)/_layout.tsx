@@ -63,6 +63,20 @@ export default function Layout() {
                         }
                     }}
                 />
+                <Stack.Screen
+                    name="marker"
+                    options={{
+                        statusBarColor: theme.colorBlack,
+                        headerShown: true,
+                        title: '',
+                        headerTintColor: theme.colorWhite,
+                        headerShadowVisible: false,
+                        headerStyle: {
+                            backgroundColor: theme.colorBlack,
+                        },
+                        headerTitleAlign: 'center',
+                    }}
+                />
             </Stack>
             <NoteOptions />
         </View>

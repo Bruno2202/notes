@@ -3,15 +3,33 @@ import { NoteContext } from '@/src/contexts/NoteContext';
 import { theme } from '@/theme';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { Drawer } from 'expo-router/drawer';
-import { useContext } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { MarkerService } from '../../core/services/MarkerService';
+import { MarkerModel } from '../../core/models/MarkerModel';
+import { MaterialIcons } from '@expo/vector-icons';
+import TabBarGradient from '@/src/components/TabBarGradient';
+import { router } from 'expo-router';
 
-function CustomDrawerContent() {
+interface LayoutProps {
+    children: ReactNode;
+}
+
+function DrawerContent() {
     const { markers, setMarkers } = useContext(NoteContext) ?? {
         markers: null,
         setMarkers: () => { },
     };
+
+    async function createMarker() {
+        await MarkerService.create(
+            new MarkerModel(
+                1,
+                "Senha"
+            )
+        );
+    }
 
     return (
         <DrawerContentScrollView
@@ -28,69 +46,90 @@ function CustomDrawerContent() {
             <View style={styles.markersContainer}>
                 <Text style={styles.tilte}>Marcadores</Text>
             </View>
-            <FlatList
-                data={markers}
-                renderItem={({ item }) => {
-                    if (item) {
-                        return (
-                            <DrawerItem
-                                label="MARCADOR"
-                                onPress={() => console.log()}
-                            />
-                        );
-                    } else {
-                        return null;
-                    }
+
+            {markers && markers.map((item, index) => (
+                <DrawerItem
+                    style={styles.marker}
+                    key={index}
+                    inactiveTintColor={theme.colorGrey}
+                    label={item.getDescription}
+                    activeTintColor={theme.colorWhite}
+                    onPress={() => console.log(item)}
+                    icon={({ color, size }) => (
+                        <MaterialIcons
+                            name="label"
+                            size={size}
+                            color={color}
+                        />
+                    )}
+                    labelStyle={{
+                        marginLeft: -20,
+                        fontFamily: 'fontFamilyRegular',
+                        fontSize: 16,
+                        color: theme.colorGrey,
+                    }}
+                />
+            ))}
+
+            <DrawerItem
+                style={styles.marker}
+                inactiveTintColor={theme.colorGrey}
+                label={"Criar marcador"}
+                activeTintColor={theme.colorWhite}
+                onPress={() => router.navigate('/(notes)/marker')}
+                icon={({ color, size }) => (
+                    <MaterialIcons
+                        name="add"
+                        size={size}
+                        color={color}
+                    />
+                )}
+                labelStyle={{
+                    marginLeft: -20,
+                    fontFamily: 'fontFamilyRegular',
+                    fontSize: 16,
+                    color: theme.colorGrey,
                 }}
             />
         </DrawerContentScrollView>
     );
 }
 
-export default function Layout() {
+export default function Layout({ children }: LayoutProps) {
     return (
         <GestureHandlerRootView style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             <Drawer
-                drawerContent={() => <CustomDrawerContent />}
+                drawerContent={() => <DrawerContent />}
                 screenOptions={{
                     swipeEdgeWidth: 400,
                     headerTintColor: theme.colorWhite,
                     drawerStyle: {
                         backgroundColor: theme.colorDarkGrey,
                         width: 240,
-                        zIndex: 999
-                    },
-                    drawerLabelStyle: {
-                        color: '#fff',
                     },
                     drawerActiveTintColor: theme.colorBlue,
-                    drawerInactiveTintColor: '#aaa',
+                    drawerInactiveTintColor: theme.colorGrey,
+                    headerStyle: {
+                        backgroundColor: theme.colorBlack,
+                        shadowColor: 'transparent',
+                    },
+                    title: '',
                 }}
             >
-                <Drawer.Screen
-                    name="index"
-                    options={{
-                        headerStyle: {
-                            backgroundColor: theme.colorBlack,
-                            shadowColor: 'transparent',
-                        },
-                        drawerLabel: 'Home',
-                        title: '',
-                    }}
-                />
+                {children}
             </Drawer>
         </GestureHandlerRootView>
-
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        zIndex: 123
     },
     header: {
         alignItems: 'flex-start',
         justifyContent: 'center',
-        marginHorizontal: 8,
+        marginHorizontal: 20,
     },
     headerTitle: {
         fontFamily: 'fontFamilySemiBold',
@@ -105,12 +144,14 @@ const styles = StyleSheet.create({
         marginVertical: 12,
     },
     markersContainer: {
-        marginHorizontal: 8,
+        marginHorizontal: 20,
         marginBottom: 12,
     },
     tilte: {
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
-        fontSize: 12,
+        fontSize: 16,
+    },
+    marker: {
     },
 });

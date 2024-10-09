@@ -22,7 +22,7 @@ export default function Layout() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        zIndex: 999
+                        zIndex: 99
                     },
                     tabBarActiveTintColor: theme.colorWhite,
                     tabBarInactiveTintColor: theme.colorGrey,

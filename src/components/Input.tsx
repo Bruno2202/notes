@@ -7,24 +7,30 @@ interface InputProps {
     placeholder: string;
     icon?: any;
     onChangeText?: any;
-    maxLength?: number
+    maxLength?: number;
+    value?: string;
+    onFocus?: () => void;
+    onBlur?: () => void;
 }
 
-export default function Input({ placeholder, icon, onChangeText, maxLength }: InputProps) {
+export default function Input({ placeholder, icon, onChangeText, maxLength, value, onFocus, onBlur }: InputProps) {
     return (
         <View style={styles.container}>
-            <TextInput 
+            <TextInput
                 placeholderTextColor={theme.colorGrey}
-                placeholder={placeholder} 
-                style={styles.input} 
+                placeholder={placeholder}
+                style={styles.input}
                 onChangeText={onChangeText}
                 maxLength={maxLength}
+                value={value && value}
+                onFocus={onFocus}
+                onBlur={onBlur}
             />
-            {icon && 
-                <MaterialIcons 
-                    name={icon} 
-                    size={24} 
-                    color={theme.colorGrey}                
+            {icon &&
+                <MaterialIcons
+                    name={icon}
+                    size={24}
+                    color={theme.colorGrey}
                 />
             }
         </View>

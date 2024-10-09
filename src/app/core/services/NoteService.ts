@@ -10,8 +10,6 @@ interface NoteTypes {
 }
 
 export class NoteService {
-    // static async select() { }
-
     static async selectById(id: number): Promise<NoteModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {

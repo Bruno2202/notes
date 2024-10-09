@@ -5,7 +5,7 @@ import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
 
-export default function CreateNote() {
+export default function Note() {
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [noteId, setNoteId] = useState<number | undefined>(undefined);

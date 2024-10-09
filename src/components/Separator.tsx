@@ -2,8 +2,12 @@ import { StyleSheet, View } from "react-native";
 
 import { theme } from "@/theme";
 
-export default function Separator() {
-    return <View style={styles.separator}></View>;
+interface PropTypes {
+    marginVertical?: number;
+}
+
+export default function Separator({ marginVertical }: PropTypes) {
+    return <View style={{...styles.separator, marginVertical}}></View>;
 }
 
 const styles = StyleSheet.create({

@@ -1,6 +1,8 @@
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
 import { MarkerModel } from "../app/core/models/MarkerModel";
+import { UserContext } from "./UserContext";
+import { MarkerController } from "../app/core/controllers/MarkerController";
 
 interface UserProviderProps {
     children: ReactNode;
@@ -10,11 +12,11 @@ export interface NoteContextType {
     noteOptionsVisible: boolean;
     setNoteOptionsVisible: React.Dispatch<React.SetStateAction<boolean>>;
     note: NoteModel | null;
-    setNote:  React.Dispatch<React.SetStateAction<NoteModel | null>>;
+    setNote: React.Dispatch<React.SetStateAction<NoteModel | null>>;
     notes: NoteModel[] | null;
-    setNotes:  React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
+    setNotes: React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
     markers: MarkerModel[] | null;
-    setMarkers:  React.Dispatch<React.SetStateAction<MarkerModel[] | null>>;
+    setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[] | null>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -25,6 +27,18 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [notes, setNotes] = useState<NoteModel[] | null>(null);
     const [markers, setMarkers] = useState<MarkerModel[] | null>(null);
 
+    const { userData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
+
+    useEffect(() => {
+        async function fetchMarkers() {
+            if (userData) {
+                setMarkers(await MarkerController.fetchMarkers(userData));
+            } 
+        }
+
+        fetchMarkers();
+    }, [userData]); 
+ 
     return (
         <NoteContext.Provider value={{
             noteOptionsVisible,

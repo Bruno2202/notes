@@ -1,15 +1,12 @@
 import Separator from '@/src/components/Separator';
 import { NoteContext } from '@/src/contexts/NoteContext';
 import { theme } from '@/theme';
-import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Drawer } from 'expo-router/drawer';
-import { ReactNode, useContext, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { ReactNode, useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { MarkerService } from '../../core/services/MarkerService';
-import { MarkerModel } from '../../core/models/MarkerModel';
 import { MaterialIcons } from '@expo/vector-icons';
-import TabBarGradient from '@/src/components/TabBarGradient';
 import { router } from 'expo-router';
 
 interface LayoutProps {
@@ -21,15 +18,6 @@ function DrawerContent() {
         markers: null,
         setMarkers: () => { },
     };
-
-    async function createMarker() {
-        await MarkerService.create(
-            new MarkerModel(
-                1,
-                "Senha"
-            )
-        );
-    }
 
     return (
         <DrawerContentScrollView

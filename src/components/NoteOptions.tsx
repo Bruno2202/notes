@@ -32,6 +32,11 @@ export default function NoteOptions() {
         router.navigate(route);
     }
 
+    function openMarkerModal() {
+        setNoteOptionsVisible(!noteOptionsVisible);
+        navigation('/(notes)/markerModal');
+    }
+
     return (
         noteOptionsVisible && (
             <Pressable
@@ -54,7 +59,7 @@ export default function NoteOptions() {
                         <Text style={styles.text}>Compartilhar</Text>
                     </TouchableOpacity>
                     <Separator />
-                    <TouchableOpacity style={styles.option}>
+                    <TouchableOpacity style={styles.option} onPress={() => openMarkerModal()}>
                         <MaterialIcons name="label" size={20} color={theme.colorBlue} />
                         <Text style={styles.text}>Marcadores</Text>
                     </TouchableOpacity>

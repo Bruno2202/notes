@@ -77,6 +77,21 @@ export default function Layout() {
                         headerTitleAlign: 'center',
                     }}
                 />
+                <Stack.Screen
+
+                    name="markerModal"
+                    options={{
+                        presentation: 'modal',
+                        statusBarColor: theme.colorBlack,
+                        headerTintColor: theme.colorWhite,
+                        title: '',
+                        headerStyle: {
+                            backgroundColor: theme.colorBlack,
+                        },
+                        headerShadowVisible: false,
+                        headerTitleAlign: 'center',
+                    }}
+                />
             </Stack>
             <NoteOptions />
         </View>

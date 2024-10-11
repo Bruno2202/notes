@@ -32,7 +32,7 @@ export class MarkerService {
         }
     }
 
-    static async selectByUserId(id: number): Promise<MarkerModel[] | null> {
+    static async selectByUserId(id: number): Promise<MarkerModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/user/${id}`, {
                 method: 'GET',
@@ -65,7 +65,7 @@ export class MarkerService {
         }
     }
 
-    static async selectByNoteId(id: number): Promise<MarkerModel[] | null> {
+    static async selectByNoteId(id: number): Promise<MarkerModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/note/${id}`, {
                 method: 'GET',

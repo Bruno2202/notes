@@ -15,8 +15,8 @@ export interface NoteContextType {
     setNote: React.Dispatch<React.SetStateAction<NoteModel | null>>;
     notes: NoteModel[] | null;
     setNotes: React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
-    markers: MarkerModel[] | null;
-    setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[] | null>>;
+    markers: MarkerModel[];
+    setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[]>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -25,7 +25,7 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [noteOptionsVisible, setNoteOptionsVisible] = useState<boolean>(false);
     const [note, setNote] = useState<NoteModel | null>(null);
     const [notes, setNotes] = useState<NoteModel[] | null>(null);
-    const [markers, setMarkers] = useState<MarkerModel[] | null>([]);
+    const [markers, setMarkers] = useState<MarkerModel[]>([]);
 
     const { userData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
 

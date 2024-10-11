@@ -48,9 +48,14 @@ export default function User() {
                 {(userData) ? (
                     <>
                         <View style={styles.userPicContainer}>
-                            {(typeof(userData.getUserPic) === "string") && (
+                            {(typeof(userData.getUserPic) === "string") ? (
                                 <Image
                                     source={{ uri: userData.getUserPic }}
+                                    style={styles.userPic}
+                                />
+                            ) : (
+                                <Image
+                                    source={require('../../../assets/images/userPic.png') }
                                     style={styles.userPic}
                                 />
                             )} 

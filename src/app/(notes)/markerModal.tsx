@@ -50,7 +50,6 @@ export default function MarkerModal() {
     async function fetchNoteMarkers(noteId: number) {
         const markers = await MarkerController.fetchNoteMarkers(noteId);
         setNoteMarkers(markers);
-        console.log(markers)
     }
 
     async function handleMark(marked: boolean, noteId: number, markerId: number) {

@@ -26,22 +26,18 @@ export class MarkerController {
         }
     }
 
-    static async fetchMarkers(user: UserModel): Promise<MarkerModel[] | null> {
+    static async fetchMarkers(user: UserModel): Promise<MarkerModel[]> {
         try {
             const markers = await MarkerService.selectByUserId(user?.getId!);
 
-            if (markers) {
-                return markers;
-            }
-
-            return null;
+            return markers;
         } catch (error: any) {
             switch (error.message) {
                 case 'O usuário não possui marcadores':
-                    return null;
+                    return [];
 
-                case 'Marcadores não encontrados':
-                    return null;
+                case 'Marcadores da nota não encontrados':
+                    return [];
 
                 default:
                     console.log(`Erro ao buscar marcadores: ${error.message}`);
@@ -49,28 +45,23 @@ export class MarkerController {
                         type: 'error',
                         text1: 'Não foi possível buscar marcadores',
                     });
-                    break;
+                    return [];
             }
-            return null;
         }
     }
 
-    static async fetchNoteMarkers(id: number): Promise<MarkerModel[] | null> {
+    static async fetchNoteMarkers(id: number): Promise<MarkerModel[]> {
         try {
             const markers = await MarkerService.selectByNoteId(id);
 
-            if (markers) {
-                return markers;
-            }
-
-            return null;
+            return markers;
         } catch (error: any) {
             switch (error.message) {
                 case 'A nota não possui marcadores':
-                    return null;
+                    return [];
 
-                case 'Marcadores não encontrados':
-                    return null;
+                case 'Marcadores da nota não encontrados':
+                    return [];
 
                 default:
                     console.log(`Erro ao buscar marcadores: ${error.message}`);
@@ -78,9 +69,8 @@ export class MarkerController {
                         type: 'error',
                         text1: 'Não foi possível buscar marcadores',
                     });
-                    break;
+                    return [];
             }
-            return null;
         }
     }
 

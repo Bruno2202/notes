@@ -65,6 +65,35 @@ export class MarkerService {
         }
     }
 
+    static async selectByNoteId(id: number): Promise<MarkerModel[] | null> {
+        try {
+            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/note/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                const markers = data.map((marker: MarkerTypes) => {
+                    return new MarkerModel(
+                        marker.userId,
+                        marker.description,
+                        marker.id,
+                    )
+                });
+
+                return markers;
+            }
+
+            throw new Error(data.error);
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
     static async create(marker: MarkerModel): Promise<MarkerModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker`, {

@@ -32,8 +32,7 @@ export default function Page() {
 
     if (isSignedIn === null) {
         return (
-            <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-            </View>
+            <View style={{ backgroundColor: theme.colorBlack, flex: 1 }} />
         );
     }
 

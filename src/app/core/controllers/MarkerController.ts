@@ -55,6 +55,35 @@ export class MarkerController {
         }
     }
 
+    static async fetchNoteMarkers(id: number): Promise<MarkerModel[] | null> {
+        try {
+            const markers = await MarkerService.selectByNoteId(id);
+
+            if (markers) {
+                return markers;
+            }
+
+            return null;
+        } catch (error: any) {
+            switch (error.message) {
+                case 'A nota não possui marcadores':
+                    return null;
+
+                case 'Marcadores não encontrados':
+                    return null;
+
+                default:
+                    console.log(`Erro ao buscar marcadores: ${error.message}`);
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Não foi possível buscar marcadores',
+                    });
+                    break;
+            }
+            return null;
+        }
+    }
+
     static async updateMarker(marker: MarkerModel) {
         try {
             await MarkerService.update(marker);

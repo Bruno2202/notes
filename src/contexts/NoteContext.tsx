@@ -25,7 +25,7 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [noteOptionsVisible, setNoteOptionsVisible] = useState<boolean>(false);
     const [note, setNote] = useState<NoteModel | null>(null);
     const [notes, setNotes] = useState<NoteModel[] | null>(null);
-    const [markers, setMarkers] = useState<MarkerModel[] | null>(null);
+    const [markers, setMarkers] = useState<MarkerModel[] | null>([]);
 
     const { userData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
 

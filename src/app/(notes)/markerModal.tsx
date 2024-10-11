@@ -1,29 +1,73 @@
 import { theme } from "@/theme";
 import { StyleSheet, Text, View } from "react-native";
 import Checkbox from 'expo-checkbox';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { MarkerModel } from "../core/models/MarkerModel";
+import { MarkerController } from "../core/controllers/MarkerController";
+import Button from "@/src/components/Button";
+import NotesMarkersController from "../core/controllers/NotesMarkersController";
 
 interface FlatListTypes {
     item: MarkerModel;
 }
 
 export default function MarkerModal() {
+    const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+    const [noteMarkers, setNoteMarkers] = useState<MarkerModel[] | null>();
 
-    const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+    const { note } = useContext(NoteContext) ?? { note: null }
+    const { markers } = useContext(NoteContext) ?? { markers: null }
 
-    const { markers, setMarkers } = useContext(NoteContext) ?? {
-        markers: null,
-        setMarkers: () => { },
-    };
+    useEffect(() => {
+        fetchNoteMarkers(note?.getId!);
+    }, []);
 
-    const toggleCheckbox = (id: string) => {
-        setCheckedItems(prevState => ({
-            ...prevState,
-            [id]: !prevState[id]
-        }));
+    useEffect(() => {
+        loadCheckedMarkers();
+    }, [markers, noteMarkers]);
+
+    function loadCheckedMarkers() {
+        if (markers && noteMarkers) {
+            const updatedCheckedItems: { [key: string]: boolean } = {};
+            
+            for (let i = 0; i < markers.length; i++) {
+                const markerId: number | undefined = markers[i].getId;
+                const foundMarker: MarkerModel | undefined = noteMarkers.find(marker => marker.getId == markerId);
+                
+                if (foundMarker) {
+                    updatedCheckedItems[markerId!] = true;
+                } else {
+                    updatedCheckedItems[markerId!] = false;
+                }
+            }
+    
+            setCheckedItems(updatedCheckedItems);
+        }
+    }
+    
+    async function fetchNoteMarkers(noteId: number) {
+        const markers = await MarkerController.fetchNoteMarkers(noteId);
+        setNoteMarkers(markers);
+        console.log(markers)
+    }
+
+    async function handleMark(marked: boolean, noteId: number, markerId: number) {
+        if (marked) {
+            NotesMarkersController.createNoteMarker(noteId, markerId);
+            return;
+        } else {
+            NotesMarkersController.deleteNoteMarker(noteId, markerId);
+        }
+    }
+
+    const toggleCheckbox = (id: number) => {
+        setCheckedItems(prevState => {
+            const updatedState = { ...prevState, [id]: !prevState[id] };
+            handleMark(updatedState[id], note?.getId!, id);
+            return updatedState;
+        });
     };
 
     return (
@@ -31,29 +75,31 @@ export default function MarkerModal() {
             <Text style={styles.title}>
                 Marcadores
             </Text>
-            <FlatList
-                data={markers}
-                keyExtractor={(item) => item.getId!.toString()}
-                renderItem={({ item }: FlatListTypes) => {
-                    const itemId = item.getId!.toString();
-                    const isChecked = !!checkedItems[itemId];
+            {noteMarkers &&
+                <FlatList
+                    data={markers}
+                    keyExtractor={(item) => item.getId!.toString()}
+                    renderItem={({ item }: FlatListTypes) => {
+                        const itemId = item.getId!;
+                        const isChecked = !!checkedItems[itemId];
 
-                    return (
-                        <View style={styles.checkboxContainer}>
-                            <Checkbox
-                                style={styles.checkbox}
-                                value={isChecked}
-                                onValueChange={() => toggleCheckbox(itemId)}
-                                color={isChecked ? theme.colorBlue : theme.colorGrey}
-                            />
-                            <Text style={styles.text}>
-                                {item.getDescription}
-                            </Text>
-                        </View>
-                    );
-                }}
-                contentContainerStyle={{ paddingBottom: 120 }}
-            />
+                        return (
+                            <View style={styles.checkboxContainer}>
+                                <Checkbox
+                                    style={styles.checkbox}
+                                    value={isChecked}
+                                    onValueChange={() => toggleCheckbox(Number(itemId))}
+                                    color={isChecked ? theme.colorBlue : theme.colorGrey}
+                                />
+                                <Text style={styles.text}>
+                                    {item.getDescription}
+                                </Text>
+                            </View>
+                        );
+                    }}
+                    contentContainerStyle={{ paddingBottom: 120 }}
+                />
+            }
         </View>
     );
 }

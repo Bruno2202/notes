@@ -13,8 +13,8 @@ export interface NoteContextType {
     setNoteOptionsVisible: React.Dispatch<React.SetStateAction<boolean>>;
     note: NoteModel | null;
     setNote: React.Dispatch<React.SetStateAction<NoteModel | null>>;
-    notes: NoteModel[] | null;
-    setNotes: React.Dispatch<React.SetStateAction<NoteModel[] | null>>;
+    notes: NoteModel[];
+    setNotes: React.Dispatch<React.SetStateAction<NoteModel[]>>;
     markers: MarkerModel[];
     setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[]>>;
 }
@@ -24,7 +24,7 @@ export const NoteContext = createContext<NoteContextType | null>(null);
 export default function NotesProvider({ children }: UserProviderProps) {
     const [noteOptionsVisible, setNoteOptionsVisible] = useState<boolean>(false);
     const [note, setNote] = useState<NoteModel | null>(null);
-    const [notes, setNotes] = useState<NoteModel[] | null>(null);
+    const [notes, setNotes] = useState<NoteModel[]>([]);
     const [markers, setMarkers] = useState<MarkerModel[]>([]);
 
     const { userData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
@@ -33,23 +33,25 @@ export default function NotesProvider({ children }: UserProviderProps) {
         async function fetchMarkers() {
             if (userData) {
                 setMarkers(await MarkerController.fetchMarkers(userData));
-            } 
+            }
         }
 
         fetchMarkers();
-    }, [userData]); 
- 
+    }, [userData]);
+
     return (
-        <NoteContext.Provider value={{
-            noteOptionsVisible,
-            setNoteOptionsVisible,
-            note,
-            setNote,
-            notes,
-            setNotes,
-            markers,
-            setMarkers
-        }}>
+        <NoteContext.Provider
+            value={{
+                noteOptionsVisible,
+                setNoteOptionsVisible,
+                note,
+                setNote,
+                notes,
+                setNotes,
+                markers,
+                setMarkers
+            }}
+        >
             {children}
         </NoteContext.Provider>
     );

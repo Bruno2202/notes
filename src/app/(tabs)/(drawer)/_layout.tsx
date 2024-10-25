@@ -117,12 +117,13 @@ const styles = StyleSheet.create({
     header: {
         alignItems: 'flex-start',
         justifyContent: 'center',
-        marginHorizontal: 20,
+        marginVertical: 12,
+        marginHorizontal: 20        
     },
     headerTitle: {
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
-        fontSize: 24,
+        fontSize: 32,
     },
     headerText: {
         color: theme.colorWhite,

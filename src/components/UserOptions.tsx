@@ -83,7 +83,7 @@ export default function UserOptions() {
                 onPress={async () => {
                     await AuthService.logout();
                     setUserData(null);
-                    setNotes(null);
+                    setNotes([]);
                 }}
                 showSwitch={false}
             />

@@ -4,6 +4,7 @@ import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
+import ColorOptions from "@/src/components/ColorOptions";
 
 export default function Note() {
     const [title, setTitle] = useState<string>("");
@@ -34,33 +35,33 @@ export default function Note() {
                 title,
                 content,
             );
-    
+
             setNote(newNote);
         }
     }, [userData, title, content]);
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                multiline
-                style={styles.noteTitle}
-                onChangeText={setTitle}
-                placeholder="Título"
-                placeholderTextColor={theme.colorMediumGrey}
-                selectionColor={theme.colorBlue}
-                value={title}
-            />
-            <TextInput
-                multiline
-                style={styles.noteContent}
-                onChangeText={setContent}
-                placeholder="Escreva aqui..."
-                placeholderTextColor={theme.colorMediumGrey}
-                textAlignVertical="top"
-                selectionColor={theme.colorBlue}
-                value={content}
-            />
-        </View>
+            <View style={styles.container}>
+                <TextInput
+                    multiline
+                    style={styles.noteTitle}
+                    onChangeText={setTitle}
+                    placeholder="Título"
+                    placeholderTextColor={theme.colorMediumGrey}
+                    selectionColor={theme.colorBlue}
+                    value={title}
+                />
+                <TextInput
+                    multiline
+                    style={styles.noteContent}
+                    onChangeText={setContent}
+                    placeholder="Escreva aqui..."
+                    placeholderTextColor={theme.colorMediumGrey}
+                    textAlignVertical="top"
+                    selectionColor={theme.colorBlue}
+                    value={content}
+                />
+            </View>
     );
 }
 

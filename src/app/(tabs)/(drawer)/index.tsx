@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, FlatList } from "react-native";
-import { useCallback, useContext } from "react";
-import { useFocusEffect } from "expo-router";
+import { useCallback, useContext, useEffect } from "react";
+import { router, useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
@@ -10,13 +10,15 @@ import { NoteController } from "../../core/controllers/NoteController";
 import SearchBar from "@/src/components/SearchBar";
 import NotePreview from "@/src/components/NotePreview";
 import NotFoundCat from "@/src/components/NotFoundCat";
+import Button from "@/src/components/Button";
+import { NoteModel } from "../../core/models/NoteModel";
 
 export default function Index() {
 	const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
 	const { note, setNote, notes, setNotes } = useContext(NoteContext) ?? {
 		note: null,
 		setNote: () => { },
-		notes: null,
+		notes: [],
 		setNotes: () => { },
 	};
 
@@ -40,7 +42,7 @@ export default function Index() {
 	);
 	
 	async function fetchNotes() {
-		const notes = await NoteController.fetchNotes(userData!);
+		const notes: NoteModel[] = await NoteController.fetchNotes(userData!);
 		setNotes(notes);
 	}
 
@@ -58,7 +60,7 @@ export default function Index() {
 			<View style={styles.searchBarContainer}>
 				<SearchBar />
 			</View>
-			{notes !== null ? (
+			{notes.length > 0 ? (
 				<FlatList
 					data={notes}
 					style={styles.notesContainer}
@@ -71,13 +73,16 @@ export default function Index() {
 								/>
 							);
 						} else {
-							return null;
+							return <></>;
 						}
 					}}
 					contentContainerStyle={{ paddingBottom: 120 }}
 				/>
 			) : (
-				<NotFoundCat />
+				<NotFoundCat 
+					text="Parece que alguém lembra tudo de cabeça!"
+					subtext="(Você não possui notas)"
+				/>
 			)}
 		</View>
 	);

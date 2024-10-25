@@ -8,6 +8,7 @@ import { MarkerModel } from "../core/models/MarkerModel";
 import { MarkerController } from "../core/controllers/MarkerController";
 import Input from "@/src/components/Input";
 import Separator from "@/src/components/Separator";
+import NotFoundCat from "@/src/components/NotFoundCat";
 
 interface FlatListTypes {
     item: MarkerModel;
@@ -21,7 +22,7 @@ export default function Marker() {
 
     const { userData } = useContext(UserContext) ?? { userData: null };
     const { markers, setMarkers } = useContext(NoteContext) ?? {
-        markers: null,
+        markers: [],
         setMarkers: () => { },
     };
 
@@ -76,42 +77,50 @@ export default function Marker() {
 
             <Separator marginVertical={32} />
 
-            <FlatList
-                data={markers}
-                keyExtractor={(item) => item.getId!.toString()}
-                renderItem={({ item, index }: FlatListTypes) => {
-                    if (item) {
-                        const isFocused = focusedIndex === index;
+            {markers.length > 0 ? (
+                <FlatList
+                    data={markers}
+                    keyExtractor={(item) => item.getId!.toString()}
+                    renderItem={({ item, index }: FlatListTypes) => {
+                        if (item) {
+                            const isFocused = focusedIndex === index;
 
-                        return (
-                            <View style={styles.markersContainer}>
-                                <View style={styles.markerInput}>
-                                    <Input
-                                        placeholder="Marcador"
-                                        value={item.getDescription}
-                                        icon="label"
-                                        onFocus={() => handleFocus(item)}
-                                        onBlur={handleBlur}
-                                        onChangeText={(text: string) => handleDescriptionChange(index, text)}
-                                    />
+                            return (
+                                <View style={styles.markersContainer}>
+                                    <View style={styles.markerInput}>
+                                        <Input
+                                            placeholder="Marcador"
+                                            value={item.getDescription}
+                                            icon="label"
+                                            onFocus={() => handleFocus(item)}
+                                            onBlur={handleBlur}
+                                            onChangeText={(text: string) => handleDescriptionChange(index, text)}
+                                        />
+                                    </View>
+                                    <TouchableOpacity
+                                        style={[
+                                            styles.removeButton,
+                                        ]}
+                                        activeOpacity={0.6}
+                                        onPress={() => handleDeleteMarker(item)}
+                                    >
+                                        <MaterialIcons name="remove" size={24} color={theme.colorWhite} />
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.removeButton,
-                                    ]}
-                                    activeOpacity={0.6}
-                                    onPress={() => handleDeleteMarker(item)}
-                                >
-                                    <MaterialIcons name="remove" size={24} color={theme.colorWhite} />
-                                </TouchableOpacity>
-                            </View>
-                        );
-                    } else {
-                        return null;
-                    }
-                }}
-                contentContainerStyle={{ paddingBottom: 120 }}
-            />
+                            );
+                        } else {
+                            return null;
+                        }
+                    }}
+                    contentContainerStyle={{ paddingBottom: 120 }}
+                />
+            ) : (
+                <NotFoundCat 
+                    text="Pra que marcadores, não é mesmo?"
+                    subtext="(Você não possui marcadores)"
+                />
+            )}
+
         </View>
     );
 }

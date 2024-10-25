@@ -1,3 +1,4 @@
+import { MarkerModel } from "../models/MarkerModel";
 import { NoteModel } from "../models/NoteModel";
 
 interface NoteTypes {
@@ -7,6 +8,13 @@ interface NoteTypes {
     id: number
     title: string
     content: string
+    markers: MarkerType[]
+}
+
+interface MarkerType {
+    userId: number
+    description: string
+    id: number
 }
 
 export class NoteService {
@@ -38,7 +46,7 @@ export class NoteService {
         }
     }
 
-    static async selectByUserId(id: number): Promise<NoteModel[] | null> {
+    static async selectByUserId(id: number): Promise<NoteModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/user/${id}`, {
                 method: 'GET',
@@ -50,21 +58,33 @@ export class NoteService {
             const data = await response.json();
 
             if (response.ok) {
-                const notes = data.map((note: NoteTypes) => {
-                    return new NoteModel(
-                        note.userId,
-                        note.typeId,
-                        note.creationDate,
-                        note.id,
-                        note.title,
-                        note.content
-                    )
+                const completeNotes: NoteModel[] = data.map((item: NoteTypes) => {
+                    const note = new NoteModel(
+                        item.userId,
+                        item.typeId,
+                        item.creationDate,
+                        item.id,
+                        item.title,
+                        item.content,
+                    );
+
+                    const markers: MarkerModel[] = item.markers.map((marker: MarkerType) =>{
+                        return new MarkerModel(
+                            marker.userId,
+                            marker.description,
+                            marker.id
+                        )
+                    })
+
+                    note.setMarkers = markers;
+
+                    return note;
                 });
 
-                return notes;
+                return completeNotes;
             }
 
-            throw new Error(data.error);
+            return [];
         } catch (error: any) {
             throw new Error(error.message);
         }
@@ -133,15 +153,15 @@ export class NoteService {
                     'Content-Type': 'application/json',
                 },
             });
-            
+
             const data = await response.json();
 
             console.log(data)
-    
+
             if (response.ok) {
                 return data.deleted
             }
-    
+
             console.error(`Erro ao deletar nota: ${data.message}`);
             return false;
         } catch (error: any) {

@@ -5,9 +5,31 @@ import { Href, router } from "expo-router";
 import { NoteContext } from "../contexts/NoteContext";
 import { useContext } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
+import { FlatList } from "react-native-gesture-handler";
+import { MarkerModel } from "../app/core/models/MarkerModel";
 
 interface PropTypes {
     noteData: NoteModel;
+}
+
+interface NoteMarkersPropTypes {
+    markers: MarkerModel[];
+}
+
+function NoteMarkers({ markers }: NoteMarkersPropTypes) {
+    return (
+        <View style={styles.markersContainer}>
+            {markers.map((item) => {
+                return (
+                    <View key={item.getId} style={styles.markerContainer}>
+                        <Text style={styles.markerText}>
+                            {item.getDescription}
+                        </Text>
+                    </View>
+                )
+            })}
+        </View>
+    );
 }
 
 export default function NotePreview({ noteData }: PropTypes) {
@@ -52,12 +74,17 @@ export default function NotePreview({ noteData }: PropTypes) {
                 {noteData.getTitle &&
                     <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
                         {noteData.getTitle}
-                    </Text> 
+                    </Text>
                 }
                 {noteData.getContent &&
-                    <Text style={noteData.getTitle ? {...styles.content, marginTop: 4} : {...styles.content}} numberOfLines={5} ellipsizeMode="tail">
-                        {noteData.getContent} 
-                    </Text> 
+                    <Text style={noteData.getTitle ? { ...styles.content, marginTop: 4 } : { ...styles.content }} numberOfLines={5} ellipsizeMode="tail">
+                        {noteData.getContent}
+                    </Text>
+                }
+                {noteData.getMarkers?.length! > 0 &&
+                    <NoteMarkers
+                        markers={noteData.getMarkers!}
+                    />
                 }
                 <Text style={styles.date}>
                     {handleNoteCreationDate(noteData.getCreationDate)}
@@ -81,7 +108,7 @@ const styles = StyleSheet.create({
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
     },
-    content: { 
+    content: {
         fontSize: 14,
         fontFamily: 'fontFamilyRegular',
         color: theme.colorGrey,
@@ -92,5 +119,24 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontFamily: 'fontFamilyRegular',
         color: theme.colorGrey,
+    },
+    markersContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        gap: 8,
+        marginTop: 20,
+        flexWrap: 'wrap',
+    },
+    markerContainer: {
+        width: 'auto',
+        borderRadius: 8,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        backgroundColor: theme.colorMediumGrey,
+        fontFamily: 'fontFamilyRegular'
+    },
+    markerText: {
+        fontFamily: 'fontFamilyRegular',
+        color: theme.colorGrey
     }
 });

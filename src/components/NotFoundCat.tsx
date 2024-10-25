@@ -2,7 +2,12 @@ import { theme } from "@/theme";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function NotFoundCat() {
+interface NotFoundCatProps {
+    text?: string;
+    subtext?: string;
+}
+
+export default function NotFoundCat({ text, subtext }: NotFoundCatProps) {
     return (
         <View style={styles.container}>
             <Image 
@@ -10,10 +15,10 @@ export default function NotFoundCat() {
                 style={styles.notFoundCat}	
             />
             <Text style={styles.text}>
-                Parece que alguém lembra tudo de cabeça!
+                {text}
             </Text>
             <Text style={{...styles.text, fontSize: 12}}>
-                (Você não possui notas)
+                {subtext}
             </Text>
         </View>
     );

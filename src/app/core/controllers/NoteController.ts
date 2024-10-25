@@ -31,19 +31,15 @@ export class NoteController {
 		}
 	}
 
-	static async fetchNotes(user: UserModel): Promise<NoteModel[] | null> {
+	static async fetchNotes(user: UserModel): Promise<NoteModel[]> {
 		try {
 			const notes = await NoteService.selectByUserId(user?.getId!);
 
-			if (notes) {
-				return notes;
-			}
-
-			return null;
+			return notes;
 		} catch (error: any) {
 			switch (error.message) {
 				case 'Notas não encontradas':
-					return null;
+					return [];
 
 				default:
 					console.log(`Erro ao buscar notas: ${error.message}`);
@@ -51,9 +47,8 @@ export class NoteController {
 						type: 'error',
 						text1: 'Não foi possível buscar notas',
 					});
-					break;
+					return [];
 			}
-			return null;
 		}
 	}
 
@@ -72,7 +67,7 @@ export class NoteController {
 	static async deleteNote(id: number) {
 		try {
 			const deleted = await NoteService.delete(id);
-			
+
 			if (deleted) {
 				Toast.show({
 					type: 'success',

@@ -7,9 +7,12 @@ import { Image } from "expo-image";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import NoteOptions from "@/src/components/NoteOptions";
 import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import ColorOptions from "@/src/components/ColorOptions";
 
 export default function Layout() {
+    const [colorVisible, setColorVisible] = useState<boolean>(false);
+    const [color, setColor] = useState<string>("");
 
     const router = useRouter();
 
@@ -28,6 +31,7 @@ export default function Layout() {
 
     return (
         <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
+            
             <Stack>
                 <Stack.Screen
                     name="note"
@@ -48,7 +52,7 @@ export default function Layout() {
                             </TouchableOpacity>
                         ),
                         headerTitle: () => (
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => setColorVisible(!colorVisible)}>
                                 <MaterialIcons color={theme.colorWhite} size={28} name="color-lens" />
                             </TouchableOpacity>
                         ),
@@ -78,7 +82,6 @@ export default function Layout() {
                     }}
                 />
                 <Stack.Screen
-
                     name="markerModal"
                     options={{
                         presentation: 'modal',
@@ -93,6 +96,7 @@ export default function Layout() {
                     }}
                 />
             </Stack>
+            {colorVisible && <ColorOptions setColor={setColor} />}
             <NoteOptions />
         </View>
     );

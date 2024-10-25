@@ -8,6 +8,7 @@ import { MarkerModel } from "../core/models/MarkerModel";
 import { MarkerController } from "../core/controllers/MarkerController";
 import Button from "@/src/components/Button";
 import NotesMarkersController from "../core/controllers/NotesMarkersController";
+import NotFoundCat from "@/src/components/NotFoundCat";
 
 interface FlatListTypes {
     item: MarkerModel;
@@ -15,10 +16,10 @@ interface FlatListTypes {
 
 export default function MarkerModal() {
     const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
-    const [noteMarkers, setNoteMarkers] = useState<MarkerModel[] | null>();
+    const [noteMarkers, setNoteMarkers] = useState<MarkerModel[]>([]);
 
     const { note } = useContext(NoteContext) ?? { note: null }
-    const { markers } = useContext(NoteContext) ?? { markers: null }
+    const { markers } = useContext(NoteContext) ?? { markers: [] }
 
     useEffect(() => {
         fetchNoteMarkers(note?.getId!);
@@ -31,22 +32,22 @@ export default function MarkerModal() {
     function loadCheckedMarkers() {
         if (markers && noteMarkers) {
             const updatedCheckedItems: { [key: string]: boolean } = {};
-            
+
             for (let i = 0; i < markers.length; i++) {
                 const markerId: number | undefined = markers[i].getId;
                 const foundMarker: MarkerModel | undefined = noteMarkers.find(marker => marker.getId == markerId);
-                
+
                 if (foundMarker) {
                     updatedCheckedItems[markerId!] = true;
                 } else {
                     updatedCheckedItems[markerId!] = false;
                 }
             }
-    
+
             setCheckedItems(updatedCheckedItems);
         }
     }
-    
+
     async function fetchNoteMarkers(noteId: number) {
         const markers = await MarkerController.fetchNoteMarkers(noteId);
         setNoteMarkers(markers);
@@ -74,7 +75,7 @@ export default function MarkerModal() {
             <Text style={styles.title}>
                 Marcadores
             </Text>
-            {noteMarkers &&
+            {markers.length > 0 ? (
                 <FlatList
                     data={markers}
                     keyExtractor={(item) => item.getId!.toString()}
@@ -98,7 +99,12 @@ export default function MarkerModal() {
                     }}
                     contentContainerStyle={{ paddingBottom: 120 }}
                 />
-            }
+            ) : (
+                <NotFoundCat 
+                    text="Parece que alguém está precisando de marcadores..."
+                    subtext="(Crie um marcador para utilizá-lo na nota)"
+                />
+            )}
         </View>
     );
 }

@@ -1,3 +1,5 @@
+import { MarkerModel } from "./MarkerModel";
+
 export class NoteModel {
     private id?: number;
     private userId: number;
@@ -5,10 +7,11 @@ export class NoteModel {
     private title?: string;
     private content?: string;
     private creationDate: Date;
+    private markers?: MarkerModel[];
 
-    constructor(userId: number, noteTypeId: number, creationDate: Date, id?: number, title?: string, content?: string);
+    constructor(userId: number, noteTypeId: number, creationDate: Date, id?: number, title?: string, content?: string, markers?: MarkerModel[]);
     constructor(note: NoteModel);
-    constructor(arg: number | NoteModel, typeId?: number, creationDate?: Date, id?: number, title?: string, content?: string) {
+    constructor(arg: number | NoteModel, typeId?: number, creationDate?: Date, id?: number, title?: string, content?: string, markers?: MarkerModel[]) {
         if (typeof arg === "number") {
             this.userId = arg;
             this.typeId = typeId!;
@@ -16,6 +19,7 @@ export class NoteModel {
             this.id = id;
             this.title = title;
             this.content = content;
+            this.markers = markers;
         } else {
             const note = arg as NoteModel;
             this.userId = note.userId;
@@ -24,6 +28,7 @@ export class NoteModel {
             this.id = note.id;
             this.content = note.content;
             this.title = note.title;
+            this.markers = note.markers;
         }
     }
 
@@ -33,6 +38,7 @@ export class NoteModel {
     set setTitle(title: string) { this.title = title; }
     set setContent(content: string) { this.content = content; }
     set setCreationDate(creationDate: Date) { this.creationDate = creationDate; }
+    set setMarkers(markers: MarkerModel[]) { this.markers = markers; }
 
     get getId() { return this.id; }
     get getUserId() { return this.userId; }
@@ -40,4 +46,5 @@ export class NoteModel {
     get getTitle() { return this.title; }
     get getContent() { return this.content; }
     get getCreationDate() { return this.creationDate; }
+    get getMarkers() { return this.markers; }
 }

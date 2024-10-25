@@ -2,7 +2,7 @@ import { theme } from "@/theme";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useContext } from "react";
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { NoteContext } from "../contexts/NoteContext";
 import { NoteController } from "../app/core/controllers/NoteController";
 import { Href, router } from "expo-router";
@@ -37,6 +37,17 @@ export default function NoteOptions() {
         navigation('/(notes)/markerModal');
     }
 
+    const share = async () => {
+        try {
+            await Share.share({
+                message:
+                    `*${note?.getTitle}*\n${note?.getContent}`,
+            });
+        } catch (error: any) {
+            console.log(`Erro ao compartilhar nota: ${error.message}`);
+        }
+    };
+
     return (
         noteOptionsVisible && (
             <Pressable
@@ -54,7 +65,7 @@ export default function NoteOptions() {
                         <Text style={styles.text}>Excluir</Text>
                     </TouchableOpacity>
                     <Separator />
-                    <TouchableOpacity style={styles.option}>
+                    <TouchableOpacity style={styles.option} onPress={() => share()}>
                         <MaterialIcons name="share" size={20} color={theme.colorBlue} />
                         <Text style={styles.text}>Compartilhar</Text>
                     </TouchableOpacity>

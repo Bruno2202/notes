@@ -27,12 +27,12 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [notes, setNotes] = useState<NoteModel[]>([]);
     const [markers, setMarkers] = useState<MarkerModel[]>([]);
 
-    const { userData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
+    const { userData, token } = useContext(UserContext) ?? { userData: null, token: undefined };
 
     useEffect(() => {
         async function fetchMarkers() {
             if (userData) {
-                setMarkers(await MarkerController.fetchMarkers(userData));
+                setMarkers(await MarkerController.fetchMarkers(token!, userData));
             }
         }
 

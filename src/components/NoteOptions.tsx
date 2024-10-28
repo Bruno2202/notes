@@ -7,8 +7,13 @@ import { NoteContext } from "../contexts/NoteContext";
 import { NoteController } from "../app/core/controllers/NoteController";
 import { Href, router } from "expo-router";
 import Separator from "./Separator";
+import { UserContext } from "../contexts/UserContext";
 
 export default function NoteOptions() {
+    const { token } = useContext(UserContext) ?? {
+		token: undefined
+	};
+
     const {
         noteOptionsVisible,
         setNoteOptionsVisible,
@@ -22,7 +27,7 @@ export default function NoteOptions() {
     };
 
     async function deleteNote(id: number) {
-        await NoteController.deleteNote(id);
+        await NoteController.deleteNote(token!, id);
         setNote(null);
         setNoteOptionsVisible(false);
         navigation('/(tabs)');

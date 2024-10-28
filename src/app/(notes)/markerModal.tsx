@@ -9,6 +9,7 @@ import { MarkerController } from "../core/controllers/MarkerController";
 import Button from "@/src/components/Button";
 import NotesMarkersController from "../core/controllers/NotesMarkersController";
 import NotFoundCat from "@/src/components/NotFoundCat";
+import { UserContext } from "@/src/contexts/UserContext";
 
 interface FlatListTypes {
     item: MarkerModel;
@@ -18,8 +19,8 @@ export default function MarkerModal() {
     const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
     const [noteMarkers, setNoteMarkers] = useState<MarkerModel[]>([]);
 
-    const { note } = useContext(NoteContext) ?? { note: null }
-    const { markers } = useContext(NoteContext) ?? { markers: [] }
+    const { note, markers } = useContext(NoteContext) ?? { note: null, markers: [] }
+    const { token } = useContext(UserContext) ?? { token: undefined }
 
     useEffect(() => {
         fetchNoteMarkers(note?.getId!);
@@ -49,7 +50,7 @@ export default function MarkerModal() {
     }
 
     async function fetchNoteMarkers(noteId: number) {
-        const markers = await MarkerController.fetchNoteMarkers(noteId);
+        const markers = await MarkerController.fetchNoteMarkers(token!, noteId);
         setNoteMarkers(markers);
     }
 

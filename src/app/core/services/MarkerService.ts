@@ -7,11 +7,12 @@ interface MarkerTypes {
 }
 
 export class MarkerService {
-    static async selectById(id: number): Promise<MarkerModel | null> {
+    static async selectById(token: string, id: number): Promise<MarkerModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/${id}`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
@@ -32,11 +33,12 @@ export class MarkerService {
         }
     }
 
-    static async selectByUserId(id: number): Promise<MarkerModel[]> {
+    static async selectByUserId(token: string, id: number): Promise<MarkerModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/user/${id}`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
@@ -65,11 +67,12 @@ export class MarkerService {
         }
     }
 
-    static async selectByNoteId(id: number): Promise<MarkerModel[]> {
+    static async selectByNoteId(token: string, id: number): Promise<MarkerModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/note/${id}`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
@@ -94,11 +97,12 @@ export class MarkerService {
         }
     }
 
-    static async create(marker: MarkerModel): Promise<MarkerModel | null> {
+    static async create(token: string, marker: MarkerModel): Promise<MarkerModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -118,11 +122,12 @@ export class MarkerService {
         }
     }
 
-    static async update(marker: MarkerModel): Promise<MarkerModel | null> {
+    static async update(token: string, marker: MarkerModel): Promise<MarkerModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker`, {
                 method: 'PUT',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -146,11 +151,12 @@ export class MarkerService {
         }
     }
 
-    static async delete(id: number) {
+    static async delete(token: string, id: number) {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/${id}`, {
                 method: 'DELETE',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });

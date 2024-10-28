@@ -18,11 +18,32 @@ interface MarkerType {
 }
 
 export class NoteService {
-    static async selectById(id: number): Promise<NoteModel | null> {
+    // static async selectAllUsersNotes(token: string) {
+    //     try {
+    //         const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`,
+    //             {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     'Authorization': token,
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             }
+    //         );
+
+    //         const data = await response.json();
+
+    //         console.log('Resposta da API:', data);
+    //     } catch (error: any) {
+    //         console.error('Erro na requisição:', error.message);
+    //     }
+    // }
+
+    static async selectById(token: string, id: number): Promise<NoteModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
@@ -46,11 +67,12 @@ export class NoteService {
         }
     }
 
-    static async selectByUserId(id: number): Promise<NoteModel[]> {
+    static async selectByUserId(token: string, id: number): Promise<NoteModel[]> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/user/${id}`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });
@@ -68,7 +90,7 @@ export class NoteService {
                         item.content,
                     );
 
-                    const markers: MarkerModel[] = item.markers.map((marker: MarkerType) =>{
+                    const markers: MarkerModel[] = item.markers.map((marker: MarkerType) => {
                         return new MarkerModel(
                             marker.userId,
                             marker.description,
@@ -90,11 +112,12 @@ export class NoteService {
         }
     }
 
-    static async create(note: NoteModel): Promise<NoteModel | null> {
+    static async create(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -114,11 +137,12 @@ export class NoteService {
         }
     }
 
-    static async update(note: NoteModel): Promise<NoteModel | null> {
+    static async update(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`, {
                 method: 'PUT',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -145,11 +169,12 @@ export class NoteService {
         }
     }
 
-    static async delete(id: number): Promise<boolean> {
+    static async delete(token: string, id: number): Promise<boolean> {
         try {
             const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {
                 method: 'DELETE',
                 headers: {
+                    'Authorization': token,
                     'Content-Type': 'application/json',
                 },
             });

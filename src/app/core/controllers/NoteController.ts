@@ -4,9 +4,10 @@ import { NoteService } from "../services/NoteService";
 import { UserModel } from "../models/UserModel";
 
 export class NoteController {
-	static async createNote(user: UserModel, note: NoteModel) {
+	static async createNote(token: string, user: UserModel, note: NoteModel) {
 		try {
 			await NoteService.create(
+				token,
 				new NoteModel(
 					user?.getId!,
 					1,
@@ -31,9 +32,9 @@ export class NoteController {
 		}
 	}
 
-	static async fetchNotes(user: UserModel): Promise<NoteModel[]> {
+	static async fetchNotes(token: string, user: UserModel): Promise<NoteModel[]> {
 		try {
-			const notes = await NoteService.selectByUserId(user?.getId!);
+			const notes = await NoteService.selectByUserId(token, user?.getId!);
 
 			return notes;
 		} catch (error: any) {
@@ -52,9 +53,9 @@ export class NoteController {
 		}
 	}
 
-	static async updateNote(note: NoteModel) {
+	static async updateNote(token: string, note: NoteModel) {
 		try {
-			await NoteService.update(note);
+			await NoteService.update(token, note);
 		} catch (error: any) {
 			console.log(`Erro ao atualizar nota: ${error.message}`);
 			Toast.show({
@@ -64,9 +65,9 @@ export class NoteController {
 		}
 	}
 
-	static async deleteNote(id: number) {
+	static async deleteNote(token: string, id: number) {
 		try {
-			const deleted = await NoteService.delete(id);
+			const deleted = await NoteService.delete(token, id);
 
 			if (deleted) {
 				Toast.show({

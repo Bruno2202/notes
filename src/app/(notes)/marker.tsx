@@ -20,15 +20,15 @@ export default function Marker() {
     const [marker, setMarker] = useState<MarkerModel | null>(null);
     const [newMarker, setNewMarker] = useState<string>('');
 
-    const { userData } = useContext(UserContext) ?? { userData: null };
+    const { userData, token } = useContext(UserContext) ?? { userData: null, token: undefined };
     const { markers, setMarkers } = useContext(NoteContext) ?? {
         markers: [],
         setMarkers: () => { },
     };
 
     async function handleDeleteMarker(marker: MarkerModel) {
-        await MarkerController.deleteMarker(marker.getId!);
-        const markers = await MarkerController.fetchMarkers(userData!);
+        await MarkerController.deleteMarker(token!, marker.getId!);
+        const markers = await MarkerController.fetchMarkers(token!, userData!);
         setMarkers(markers);
     }
 
@@ -46,8 +46,8 @@ export default function Marker() {
     };
 
     async function handleCreateMarker() {
-        await MarkerController.createMarker(userData!, newMarker);
-        const markers = await MarkerController.fetchMarkers(userData!);
+        await MarkerController.createMarker(token!, userData!, newMarker);
+        const markers = await MarkerController.fetchMarkers(token!, userData!);
         setMarkers(markers);
         setNewMarker('');
     };

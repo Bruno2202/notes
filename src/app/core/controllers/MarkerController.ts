@@ -4,9 +4,10 @@ import { MarkerService } from "../services/MarkerService";
 import { MarkerModel } from "../models/MarkerModel";
 
 export class MarkerController {
-    static async createMarker(user: UserModel, descritpion: string) {
+    static async createMarker(token: string, user: UserModel, descritpion: string) {
         try {
             await MarkerService.create(
+                token,
                 new MarkerModel(
                     user?.getId!,
                     descritpion,
@@ -26,9 +27,9 @@ export class MarkerController {
         }
     }
 
-    static async fetchMarkers(user: UserModel): Promise<MarkerModel[]> {
+    static async fetchMarkers(token: string, user: UserModel): Promise<MarkerModel[]> {
         try {
-            const markers = await MarkerService.selectByUserId(user?.getId!);
+            const markers = await MarkerService.selectByUserId(token!, user?.getId!);
 
             return markers;
         } catch (error: any) {
@@ -50,9 +51,9 @@ export class MarkerController {
         }
     }
 
-    static async fetchNoteMarkers(id: number): Promise<MarkerModel[]> {
+    static async fetchNoteMarkers(token: string, id: number): Promise<MarkerModel[]> {
         try {
-            const markers = await MarkerService.selectByNoteId(id);
+            const markers = await MarkerService.selectByNoteId(token, id);
 
             return markers;
         } catch (error: any) {
@@ -74,9 +75,9 @@ export class MarkerController {
         }
     }
 
-    static async updateMarker(marker: MarkerModel) {
+    static async updateMarker(token: string, marker: MarkerModel) {
         try {
-            await MarkerService.update(marker);
+            await MarkerService.update(token, marker);
         } catch (error: any) {
             console.log(`Erro ao atualizar marcador: ${error.message}`);
             Toast.show({
@@ -86,9 +87,9 @@ export class MarkerController {
         }
     }
 
-    static async deleteMarker(id: number) {
+    static async deleteMarker(token: string, id: number) {
         try {
-            await MarkerService.delete(id);
+            await MarkerService.delete(token, id);
         } catch (error: any) {
             console.log(`Erro ao deletar marcador: ${error.message}`);
             Toast.show({

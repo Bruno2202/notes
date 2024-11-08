@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Href, router } from "expo-router";
 
 import { theme } from "@/theme";
@@ -13,20 +13,25 @@ export default function UserPic() {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Esqueceu {"\n"}
-                a senha?
-            </Text>
-            <Text style={styles.text}>
-                Não se preocupe! Isso acontece com todos. {"\n"}
-                Por favor, insira o seu e-mail abaixo e enviaremos um link para você redefinir sua senha.
-            </Text>
-            <View style={styles.forms}>
-                <Input placeholder="Email" icon={"mail-outline"} />
-                <Button onPress={() => navigation('/')} text={"ENVIAR EMAIL"} />
-            </View>
-        </View>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <Text style={styles.title}>
+                    Esqueceu {"\n"}
+                    a senha?
+                </Text>
+                <Text style={styles.text}>
+                    Não se preocupe! Isso acontece com todos. {"\n"}
+                    Por favor, insira o seu e-mail abaixo e enviaremos um link para você redefinir sua senha.
+                </Text>
+                <View style={styles.forms}>
+                    <Input placeholder="Email" icon={"mail-outline"} />
+                    <Button onPress={() => navigation('/')} text={"ENVIAR EMAIL"} />
+                </View>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 }
 

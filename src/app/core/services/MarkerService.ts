@@ -9,7 +9,7 @@ interface MarkerTypes {
 export class MarkerService {
     static async selectById(token: string, id: number): Promise<MarkerModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -35,7 +35,7 @@ export class MarkerService {
 
     static async selectByUserId(token: string, id: number): Promise<MarkerModel[]> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/user/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -69,7 +69,7 @@ export class MarkerService {
 
     static async selectByNoteId(token: string, id: number): Promise<MarkerModel[]> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/note/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/note/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -99,7 +99,7 @@ export class MarkerService {
 
     static async create(token: string, marker: MarkerModel): Promise<MarkerModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker`, {
                 method: 'POST',
                 headers: {
                     'Authorization': token,
@@ -124,7 +124,7 @@ export class MarkerService {
 
     static async update(token: string, marker: MarkerModel): Promise<MarkerModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': token,
@@ -153,7 +153,7 @@ export class MarkerService {
 
     static async delete(token: string, id: number) {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/marker/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': token,

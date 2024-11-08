@@ -3,18 +3,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { theme } from "@/theme";
 
-export default function SearchBar() {
+interface PropTypes {
+    onChangeTerm: any;
+}
+
+export default function SearchBar({ onChangeTerm }: PropTypes) {
     return (
         <View style={styles.container}>
-            <MaterialIcons 
-                name={"search"} 
-                size={24} 
-                color={theme.colorGrey}                
+            <MaterialIcons
+                name={"search"}
+                size={24}
+                color={theme.colorGrey}
             />
-            <TextInput 
+            <TextInput
                 placeholder="Lista de compras"
                 placeholderTextColor={theme.colorGrey}
-                style={styles.input} 
+                style={styles.input}
+                onChangeText={onChangeTerm}
             />
         </View>
     );

@@ -5,7 +5,6 @@ import { Href, router } from "expo-router";
 import { NoteContext } from "../contexts/NoteContext";
 import { useContext } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
-import { FlatList } from "react-native-gesture-handler";
 import { MarkerModel } from "../app/core/models/MarkerModel";
 
 interface PropTypes {

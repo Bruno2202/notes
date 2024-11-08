@@ -8,6 +8,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import TabBarGradient from '@/src/components/TabBarGradient';
 
 interface LayoutProps {
     children: ReactNode;
@@ -37,7 +38,6 @@ function DrawerContent() {
 
             {markers && markers.map((item, index) => (
                 <DrawerItem
-                    style={styles.marker}
                     key={index}
                     inactiveTintColor={theme.colorGrey}
                     label={item.getDescription}
@@ -60,7 +60,6 @@ function DrawerContent() {
             ))}
 
             <DrawerItem
-                style={styles.marker}
                 inactiveTintColor={theme.colorGrey}
                 label={"Criar marcador"}
                 activeTintColor={theme.colorWhite}
@@ -94,6 +93,7 @@ export default function Layout({ children }: LayoutProps) {
                     drawerStyle: {
                         backgroundColor: theme.colorDarkGrey,
                         width: 240,
+                        zIndex: 99
                     },
                     drawerActiveTintColor: theme.colorBlue,
                     drawerInactiveTintColor: theme.colorGrey,
@@ -110,15 +110,15 @@ export default function Layout({ children }: LayoutProps) {
     );
 }
 
+
 const styles = StyleSheet.create({
     container: {
-        zIndex: 123
     },
     header: {
         alignItems: 'flex-start',
         justifyContent: 'center',
         marginVertical: 12,
-        marginHorizontal: 20        
+        marginHorizontal: 20
     },
     headerTitle: {
         fontFamily: 'fontFamilySemiBold',
@@ -140,7 +140,5 @@ const styles = StyleSheet.create({
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
         fontSize: 16,
-    },
-    marker: {
     },
 });

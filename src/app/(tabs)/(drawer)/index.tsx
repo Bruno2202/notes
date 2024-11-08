@@ -1,5 +1,5 @@
-import { Text, View, StyleSheet, FlatList } from "react-native";
-import { useCallback, useContext, useEffect } from "react";
+import { Text, View, StyleSheet, FlatList, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
@@ -7,24 +7,29 @@ import { UserContext } from "@/src/contexts/UserContext";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { NoteController } from "../../core/controllers/NoteController";
 import { NoteModel } from "../../core/models/NoteModel";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import SearchBar from "@/src/components/SearchBar";
 import NotePreview from "@/src/components/NotePreview";
 import NotFoundCat from "@/src/components/NotFoundCat";
+import { ModalContext } from "@/src/contexts/ModalContext";
 
 export default function Index() {
-	const { userData, setUserData, token } = useContext(UserContext) ?? {
-		userData: null,
-		setUserData: () => { },
-		token: undefined
-	};
+	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [filteredNotes, setFilteredNotes] = useState<NoteModel[]>([]);
 
-	const { note, setNote, notes, setNotes } = useContext(NoteContext) ?? {
-		note: null,
-		setNote: () => { },
-		notes: [],
-		setNotes: () => { },
-	};
+	const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!
+	const { note, setNote, notes, setNotes } = useContext(NoteContext)!
+	const { userData, token } = useContext(UserContext)!
+
+	useEffect(() => {
+		function searchNotesByName() {
+			const fNotes: NoteModel[] = notes.filter(note => note.getTitle!.toLowerCase().includes(searchTerm.toLowerCase()));
+			setFilteredNotes(fNotes);
+		}
+
+		searchNotesByName();
+	}, [searchTerm]);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -51,44 +56,59 @@ export default function Index() {
 	}
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.saluation}>
-				{userData &&
-					<Text style={styles.saluationText}>
-						Olá,
-						{"\n"}
-						{userData.getName}
-					</Text>
-				}
-			</View>
-			<View style={styles.searchBarContainer}>
-				<SearchBar />
-			</View>
-			{notes.length > 0 ? (
-				<FlatList
-					data={notes}
-					style={styles.notesContainer}
-					keyExtractor={(item) => item.getId!.toString()}
-					renderItem={({ item }) => {
-						if (item) {
-							return (
-								<NotePreview
-									noteData={item}
-								/>
-							);
-						} else {
-							return <></>;
-						}
-					}}
-					contentContainerStyle={{ paddingBottom: 120 }}
-				/>
-			) : (
-				<NotFoundCat
-					text="Parece que alguém lembra tudo de cabeça!"
-					subtext="(Você não possui notas)"
-				/>
-			)}
-		</View>
+		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+			<KeyboardAvoidingView
+				style={styles.container}
+				behavior={"padding"}
+			>
+				<View style={styles.saluation}>
+					{userData &&
+						<Text style={styles.saluationText}>
+							Olá,
+							{"\n"}
+							{userData.getName}
+						</Text>
+					}
+				</View>
+				<View style={styles.searchBarContainer}>
+					<SearchBar
+						onChangeTerm={setSearchTerm}
+					/>
+					<TouchableOpacity activeOpacity={0.6} onPress={() => {
+						setFilterIsVisible(!filterIsVisible);
+					}}>
+						<MaterialIcons name="filter-list" color={theme.colorWhite} size={24} />
+					</TouchableOpacity>
+				</View>
+
+				{notes.length > 0 ? (
+					<FlatList
+						data={searchTerm != "" ? filteredNotes : notes}
+						style={styles.notesContainer}
+						keyExtractor={(item) => item.getId!.toString()}
+						renderItem={({ item }) => {
+							if (item) {
+								return (
+									<NotePreview
+										noteData={item}
+									/>
+								);
+							} else {
+								return (
+									<></>
+								)
+							}
+						}}
+						contentContainerStyle={{ paddingBottom: 120 }}
+					/>
+				) : (
+					<NotFoundCat
+						text="Parece que alguém lembra tudo de cabeça!"
+						subtext="(Você não possui notas)"
+					/>
+				)}
+			</KeyboardAvoidingView>
+		</TouchableWithoutFeedback>
 	);
 }
 
@@ -102,8 +122,10 @@ const styles = StyleSheet.create({
 	},
 	searchBarContainer: {
 		paddingHorizontal: theme.paddingHorizontal,
+		alignItems: "flex-end",
 		marginTop: 20,
-		marginBottom: 40,
+		marginBottom: 20,
+		gap: 12,
 	},
 	saluationText: {
 		color: theme.colorWhite,

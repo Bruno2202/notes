@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
@@ -34,7 +34,7 @@ export default function SignUp() {
             const user = new UserModel(name, email, password);
             try {
                 const isValid = await UserService.validateFields(user);
-            
+
                 if (isValid) {
                     router.push({
                         pathname: '/(auth)/userPic',
@@ -51,24 +51,29 @@ export default function SignUp() {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Cadastro
-            </Text>
-            <View style={styles.forms}>
-                <Input placeholder="Nome de usuário" icon={"person"} onChangeText={setName} maxLength={25} />
-                <Input placeholder="Email" icon={"mail-outline"} onChangeText={setEmail} />
-                <PasswordInput placeholder="Senha" onChangeText={setPassword} canView={true} />
-                <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} canView={false} />
-                <View style={styles.next}>
-                    <Button onPress={nextStep} text={"AVANÇAR"} />
-                    <Link style={styles.signIn} href={"/"}>
-                        <Text>Já possui uma conta? </Text>
-                        <Text style={styles.textFocus}>ENTRAR</Text>
-                    </Link>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <Text style={styles.title}>
+                    Cadastro
+                </Text>
+                <View style={styles.forms}>
+                    <Input placeholder="Nome de usuário" icon={"person"} onChangeText={setName} maxLength={25} />
+                    <Input placeholder="Email" icon={"mail-outline"} onChangeText={setEmail} />
+                    <PasswordInput placeholder="Senha" onChangeText={setPassword} canView={true} />
+                    <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} canView={false} />
+                    <View style={styles.next}>
+                        <Button onPress={nextStep} text={"AVANÇAR"} />
+                        <Link style={styles.signIn} href={"/"}>
+                            <Text>Já possui uma conta? </Text>
+                            <Text style={styles.textFocus}>ENTRAR</Text>
+                        </Link>
+                    </View>
                 </View>
-            </View>
-        </View>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 }
 

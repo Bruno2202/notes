@@ -20,7 +20,7 @@ interface MarkerType {
 export class NoteService {
     // static async selectAllUsersNotes(token: string) {
     //     try {
-    //         const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`,
+    //         const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`,
     //             {
     //                 method: 'GET',
     //                 headers: {
@@ -40,7 +40,7 @@ export class NoteService {
 
     static async selectById(token: string, id: number): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -69,7 +69,7 @@ export class NoteService {
 
     static async selectByUserId(token: string, id: number): Promise<NoteModel[]> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/user/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -114,7 +114,7 @@ export class NoteService {
 
     static async create(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`, {
                 method: 'POST',
                 headers: {
                     'Authorization': token,
@@ -139,7 +139,7 @@ export class NoteService {
 
     static async update(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': token,
@@ -171,7 +171,7 @@ export class NoteService {
 
     static async delete(token: string, id: number): Promise<boolean> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notes/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': token,
@@ -180,8 +180,6 @@ export class NoteService {
             });
 
             const data = await response.json();
-
-            console.log(data)
 
             if (response.ok) {
                 return data.deleted

@@ -11,7 +11,7 @@ interface UserResponse {
 export class UserService {
     static async selectById(id: number): Promise<UserModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios/id/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/id/${id}`, {
                 method: 'GET',
             });
 
@@ -43,7 +43,7 @@ export class UserService {
 
     static async validateFields(user: UserModel): Promise<boolean> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios/validar`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/validar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ export class UserService {
 
     static async register(user: UserModel): Promise<UserModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export class UserService {
 
     static async update(user: UserModel): Promise<UserModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export class UserService {
 
     static async delete(id: number): Promise<boolean> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/usuarios/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

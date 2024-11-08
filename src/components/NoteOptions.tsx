@@ -71,12 +71,12 @@ export default function NoteOptions() {
                     </TouchableOpacity>
                     <Separator />
                     <TouchableOpacity style={styles.option} onPress={() => share()}>
-                        <MaterialIcons name="share" size={20} color={theme.colorBlue} />
+                        <MaterialIcons name="share" size={20} color={theme.colorGrey} />
                         <Text style={styles.text}>Compartilhar</Text>
                     </TouchableOpacity>
                     <Separator />
                     <TouchableOpacity style={styles.option} onPress={() => openMarkerModal()}>
-                        <MaterialIcons name="label" size={20} color={theme.colorBlue} />
+                        <MaterialIcons name="label" size={20} color={theme.colorGrey} />
                         <Text style={styles.text}>Marcadores</Text>
                     </TouchableOpacity>
                 </View>

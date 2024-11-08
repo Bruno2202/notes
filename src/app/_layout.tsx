@@ -1,7 +1,7 @@
 import { router, Stack } from "expo-router";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -10,6 +10,9 @@ import { theme } from "@/theme";
 import UserProvider from "../contexts/UserContext";
 import NotesProvider from "../contexts/NoteContext";
 import AppInfoProvider from "../contexts/AppInfoContext";
+import LoadingProvider from "../contexts/LoadingContext";
+import ModalProvider, { ModalContext } from "../contexts/ModalContext";
+import BottomModal from "../components/BottomModal";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,47 +39,52 @@ export default function Layout() {
         <UserProvider>
             <NotesProvider>
                 <AppInfoProvider>
-                    <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-                        <Stack>
-                            <Stack.Screen
-                                name="index"
-                                options={{
-                                    statusBarTranslucent: true,
-                                    headerShown: false,
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(tabs)"
-                                options={{
-                                    statusBarTranslucent: true,
-                                    statusBarColor: theme.colorBlack,
-                                    headerShown: false,
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(auth)"
-                                options={{
-                                    statusBarTranslucent: true,
-                                    headerShown: false,
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(notes)"
-                                options={{
-                                    statusBarTranslucent: true,
-                                    headerShown: false,
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(settings)"
-                                options={{
-                                    statusBarTranslucent: true,
-                                    headerShown: false,
-                                }}
-                            />
-                        </Stack>
-                        <Toast />
-                    </View>
+                    <LoadingProvider>
+                        <ModalProvider>
+                            <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
+
+                                <Stack>
+                                    <Stack.Screen
+                                        name="index"
+                                        options={{
+                                            statusBarTranslucent: true,
+                                            headerShown: false,
+                                        }}
+                                    />
+                                    <Stack.Screen
+                                        name="(tabs)"
+                                        options={{
+                                            statusBarTranslucent: true,
+                                            statusBarColor: theme.colorBlack,
+                                            headerShown: false,
+                                        }}
+                                    />
+                                    <Stack.Screen
+                                        name="(auth)"
+                                        options={{
+                                            statusBarTranslucent: true,
+                                            headerShown: false,
+                                        }}
+                                    />
+                                    <Stack.Screen
+                                        name="(notes)"
+                                        options={{
+                                            statusBarTranslucent: true,
+                                            headerShown: false,
+                                        }}
+                                    />
+                                    <Stack.Screen
+                                        name="(settings)"
+                                        options={{
+                                            statusBarTranslucent: true,
+                                            headerShown: false,
+                                        }}
+                                    />
+                                </Stack>
+                                <Toast />
+                            </View>
+                        </ModalProvider>
+                    </LoadingProvider>
                 </AppInfoProvider>
             </NotesProvider>
         </UserProvider>

@@ -14,7 +14,7 @@ interface UserResponse {
 export class AuthService {
     static async login(email: string, password: string): Promise<UserModel | null> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/login`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

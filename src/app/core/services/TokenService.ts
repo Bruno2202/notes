@@ -12,9 +12,10 @@ export interface TokenDataTypes {
 export class TokenService {
     static async createToken(user: UserModel): Promise<string | undefined> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/token/generate`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/token/generate`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -39,9 +40,10 @@ export class TokenService {
 
     static async getTokenData(token: string): Promise<TokenDataTypes | undefined> {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/token/data`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/token/data`, {
                 method: 'POST',
                 headers: {
+                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({

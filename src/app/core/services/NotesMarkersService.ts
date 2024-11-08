@@ -4,7 +4,7 @@ import NotesMarkersModel from "../models/NotesMarkersModel";
 export default class NotesMarkersService {
     static async create(noteMarker: NotesMarkersModel) {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notesMarkers`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notesMarkers`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export default class NotesMarkersService {
 
     static async delete(noteMarker: NotesMarkersModel) {
         try {
-            const response = await fetch(`http://${process.env.EXPO_PUBLIC_APIHOST}:${process.env.EXPO_PUBLIC_APIPORT}/notesMarkers`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notesMarkers`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

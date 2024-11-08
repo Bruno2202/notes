@@ -13,6 +13,7 @@ export default function TabBarGradient() {
 
 const styles = StyleSheet.create({
     gradient: {
+        zIndex: 1,
         position: 'absolute',
         bottom: 0,
         left: 0,

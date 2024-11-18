@@ -1,18 +1,20 @@
-import { Text, View, StyleSheet, FlatList, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteContext } from "@/src/contexts/NoteContext";
-import { NoteController } from "../../core/controllers/NoteController";
-import { NoteModel } from "../../core/models/NoteModel";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import SearchBar from "@/src/components/SearchBar";
 import NotePreview from "@/src/components/NotePreview";
 import NotFoundCat from "@/src/components/NotFoundCat";
 import { ModalContext } from "@/src/contexts/ModalContext";
+import { NoteController } from "../../core/controllers/NoteController";
+import { NoteModel } from "../../core/models/NoteModel";
+import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
 	const [searchTerm, setSearchTerm] = useState<string>("");
@@ -58,10 +60,14 @@ export default function Index() {
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<KeyboardAvoidingView
-				style={styles.container}
+				style={[styles.container]}
 				behavior={"padding"}
 			>
-				<View style={styles.saluation}>
+				<Animated.View
+					entering={FadeInLeft}
+					exiting={FadeOutLeft}
+					style={[styles.saluation]}
+				>
 					{userData &&
 						<Text style={styles.saluationText}>
 							Olá,
@@ -69,7 +75,7 @@ export default function Index() {
 							{userData.getName}
 						</Text>
 					}
-				</View>
+				</Animated.View>
 				<View style={styles.searchBarContainer}>
 					<SearchBar
 						onChangeTerm={setSearchTerm}
@@ -82,9 +88,9 @@ export default function Index() {
 				</View>
 
 				{notes.length > 0 ? (
-					<FlatList
+					<Animated.FlatList
 						data={searchTerm != "" ? filteredNotes : notes}
-						style={styles.notesContainer}
+						style={[styles.notesContainer]}
 						keyExtractor={(item) => item.getId!.toString()}
 						renderItem={({ item }) => {
 							if (item) {
@@ -119,6 +125,8 @@ const styles = StyleSheet.create({
 	},
 	saluation: {
 		paddingHorizontal: theme.paddingHorizontal,
+		height: 'auto',
+		maxHeight: 120,
 	},
 	searchBarContainer: {
 		paddingHorizontal: theme.paddingHorizontal,
@@ -135,5 +143,6 @@ const styles = StyleSheet.create({
 	notesContainer: {
 		paddingHorizontal: theme.paddingHorizontal,
 		width: '100%',
+		height: 10000
 	},
 });

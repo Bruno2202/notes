@@ -62,7 +62,7 @@ export default function UserOptions() {
                 iconType="MaterialIcons"
                 iconName="settings"
                 colorBackgroundGradient={['#1A94F7', '#1A38D3']}
-                onPress={() => navigation('../(settings)')}
+                onPress={() => navigation('/(settings)')}
                 showSwitch={false}
             />
             <Separator />

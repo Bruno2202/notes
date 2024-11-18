@@ -26,7 +26,7 @@ export default function NoteOptions() {
         setNote: () => { }
     };
 
-    async function deleteNote(id: number) {
+    async function deleteNote(id: string) {
         await NoteController.deleteNote(token!, id);
         setNote(null);
         setNoteOptionsVisible(false);

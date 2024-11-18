@@ -1,12 +1,10 @@
 import { Stack, useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { Text, View, TouchableOpacity, BackHandler } from "react-native";
+import { TouchableOpacity, BackHandler } from "react-native";
 
 import { theme } from "@/theme";
-import { Image } from "expo-image";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import NoteOptions from "@/src/components/NoteOptions";
-import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
+import { NoteContext } from "@/src/contexts/NoteContext";
 import { useContext, useEffect, useState } from "react";
 import ColorOptions from "@/src/components/ColorOptions";
 
@@ -16,22 +14,8 @@ export default function Layout() {
 
     const router = useRouter();
 
-    const handleBackPress = () => {
-        router.replace('/(tabs)');
-        return true;
-    };
-
-    useEffect(() => {
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-        return () => {
-            backHandler.remove();
-        };
-    }, []);
-
     return (
-        <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-            
+        <>
             <Stack>
                 <Stack.Screen
                     name="note"
@@ -46,8 +30,9 @@ export default function Layout() {
                         },
                         headerTitleAlign: 'center',
                         headerBackVisible: false,
+
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => handleBackPress()}>
+                            <TouchableOpacity onPress={() => router.navigate('/(tabs)')}>
                                 <MaterialIcons color={theme.colorWhite} size={22.5} name="arrow-back" />
                             </TouchableOpacity>
                         ),
@@ -70,7 +55,6 @@ export default function Layout() {
                 <Stack.Screen
                     name="marker"
                     options={{
-                        statusBarColor: theme.colorBlack,
                         headerShown: true,
                         title: '',
                         headerTintColor: theme.colorWhite,
@@ -98,6 +82,6 @@ export default function Layout() {
             </Stack>
             {colorVisible && <ColorOptions setColor={setColor} />}
             <NoteOptions />
-        </View>
+        </>
     );
 }

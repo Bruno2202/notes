@@ -18,11 +18,11 @@ interface NoteMarkersPropTypes {
 function NoteMarkers({ markers }: NoteMarkersPropTypes) {
     return (
         <View style={styles.markersContainer}>
-            {markers.map((item) => {
+            {markers.map((marker) => {
                 return (
-                    <View key={item.getId} style={styles.markerContainer}>
+                    <View key={marker.getId} style={styles.markerContainer}>
                         <Text style={styles.markerText}>
-                            {item.getDescription}
+                            {marker.getDescription}
                         </Text>
                     </View>
                 )
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colorDarkGrey,
         borderRadius: 8,
         padding: 8,
+        position: 'relative'
     },
     title: {
         fontSize: 20,

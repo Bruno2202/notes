@@ -1,7 +1,7 @@
-import { router, Stack } from "expo-router";
+import { Stack, useSegments } from "expo-router";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -11,8 +11,7 @@ import UserProvider from "../contexts/UserContext";
 import NotesProvider from "../contexts/NoteContext";
 import AppInfoProvider from "../contexts/AppInfoContext";
 import LoadingProvider from "../contexts/LoadingContext";
-import ModalProvider, { ModalContext } from "../contexts/ModalContext";
-import BottomModal from "../components/BottomModal";
+import ModalProvider from "../contexts/ModalContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,7 +41,6 @@ export default function Layout() {
                     <LoadingProvider>
                         <ModalProvider>
                             <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-
                                 <Stack>
                                     <Stack.Screen
                                         name="index"
@@ -52,7 +50,7 @@ export default function Layout() {
                                         }}
                                     />
                                     <Stack.Screen
-                                        name="(tabs)"
+                                        name="(drawer)"
                                         options={{
                                             statusBarTranslucent: true,
                                             statusBarColor: theme.colorBlack,
@@ -87,6 +85,6 @@ export default function Layout() {
                     </LoadingProvider>
                 </AppInfoProvider>
             </NotesProvider>
-        </UserProvider>
+        </UserProvider >
     );
 }

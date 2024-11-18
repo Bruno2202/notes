@@ -4,17 +4,18 @@ import { useContext, useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { theme } from "@/theme";
-import { UserModel } from "../core/models/UserModel";
-import UserOptions from "@/src/components/UserOptions";
-import { ImageModel } from "../core/models/ImageModel";
+import { UserModel } from "../../core/models/UserModel";
+import { ImageModel } from "../../core/models/ImageModel";
 import { UserContext } from "@/src/contexts/UserContext";
-import { UserService } from "../core/services/UserService";
-import TabBarGradient from "@/src/components/TabBarGradient";
-import FeedPostsFooter from "@/src/components/FooterCredits";
+import { UserService } from "../../core/services/UserService";
 import { LinearGradient } from "expo-linear-gradient";
+import { NoteContext } from "@/src/contexts/NoteContext";
+import UserCards from "@/src/components/UserCards";
+import UserOptions from "@/src/components/UserOptions";
 
 export default function User() {
-    const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
+    const { userData, setUserData, token } = useContext(UserContext) ?? { userData: null, setUserData: () => { }, token: undefined };
+    const { notesCounter } = useContext(NoteContext)!
 
     const [newUserPic, setNewUserPic] = useState<string | null>(null);
 
@@ -22,15 +23,16 @@ export default function User() {
         if (newUserPic && userData) {
             const newUserData = new UserModel(
                 userData.getName,
-                userData.getEmail, 
+                userData.getEmail,
                 userData.getPassword,
+                userData.getCreationDate,
                 userData.getId,
                 newUserPic
             );
 
             const updateUser = async () => {
                 try {
-                    const updatedUser = await UserService.update(newUserData);
+                    const updatedUser = await UserService.update(newUserData, token!);
                     setUserData(updatedUser);
                 } catch (error) {
                     console.error("Erro ao atualizar o usuário:", error);
@@ -38,27 +40,27 @@ export default function User() {
             };
 
             setNewUserPic(null);
-            updateUser(); 
+            updateUser();
         }
     }, [newUserPic]);
 
     return (
-        <> 
+        <>
             <View style={styles.container}>
                 {(userData) ? (
                     <>
                         <View style={styles.userPicContainer}>
-                            {(typeof(userData.getUserPic) === "string") ? (
+                            {(typeof (userData.getUserPic) === "string") ? (
                                 <Image
                                     source={{ uri: userData.getUserPic }}
                                     style={styles.userPic}
                                 />
                             ) : (
                                 <Image
-                                    source={require('../../../assets/images/userPic.png') }
+                                    source={require('../../../../assets/images/userPic.png')}
                                     style={styles.userPic}
                                 />
-                            )} 
+                            )}
                             <TouchableOpacity
                                 onPress={async () => {
                                     ImageModel.pickImage().then(image => {
@@ -67,7 +69,7 @@ export default function User() {
                                 }}
                                 activeOpacity={0.4}
                             >
-                                <LinearGradient 
+                                <LinearGradient
                                     colors={['#1A94F7', '#1A38D3']}
                                     style={styles.editIconContainer}>
                                     <MaterialIcons name="edit" color={theme.colorWhite} size={24} />
@@ -77,11 +79,12 @@ export default function User() {
                         <Text style={styles.username}>
                             {userData.getName}
                         </Text>
-                        <View style={styles.emailContainer}>
-                            <Text style={styles.email}>
-                                {userData.getEmail}
-                            </Text>
-                        </View>
+                        <UserCards
+                            description={`Total de notas : ${notesCounter}`}
+                        />
+                        <UserCards
+                            description={userData.getEmail}
+                        />
                         <UserOptions />
                     </>
                 ) : (
@@ -125,18 +128,7 @@ const styles = StyleSheet.create({
         fontFamily: 'fontFamilySemiBold',
         color: theme.colorWhite,
         fontSize: 24,
-    },
-    emailContainer: {
-        backgroundColor: theme.colorDarkGrey,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 8,
-        marginVertical: 40,
-    },
-    email: {
-        fontSize: 12,
-        color: theme.colorGrey,
-        fontFamily: 'fontFamilyLight',
+        marginBottom: 20,
     },
     optionContainer: {
         width: '100%',

@@ -17,6 +17,8 @@ export interface NoteContextType {
     setNotes: React.Dispatch<React.SetStateAction<NoteModel[]>>;
     markers: MarkerModel[];
     setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[]>>;
+    notesCounter: number;
+    setNotesCounter: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -26,18 +28,29 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [note, setNote] = useState<NoteModel | null>(null);
     const [notes, setNotes] = useState<NoteModel[]>([]);
     const [markers, setMarkers] = useState<MarkerModel[]>([]);
+    const [notesCounter, setNotesCounter] = useState<number>(0);
 
     const { userData, token } = useContext(UserContext) ?? { userData: null, token: undefined };
 
     useEffect(() => {
-        async function fetchMarkers() {
-            if (userData) {
-                setMarkers(await MarkerController.fetchMarkers(token!, userData));
-            }
-        }
-
         fetchMarkers();
     }, [userData]);
+
+    useEffect(() => {
+        getNotesCounter();
+    }, [notes]);
+
+    async function fetchMarkers() {
+        if (userData) {
+            setMarkers(await MarkerController.fetchMarkers(token!, userData));
+        }
+    }
+
+    async function getNotesCounter() {
+        if (userData) {
+            setNotesCounter(notes.length);
+        }
+    }
 
     return (
         <NoteContext.Provider
@@ -49,7 +62,9 @@ export default function NotesProvider({ children }: UserProviderProps) {
                 notes,
                 setNotes,
                 markers,
-                setMarkers
+                setMarkers,
+                notesCounter,
+                setNotesCounter,
             }}
         >
             {children}

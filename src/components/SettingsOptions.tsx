@@ -25,9 +25,9 @@ const navigation = (route: Href) => {
     router.push(route);
 }
 
-async function deleteUser(userData: UserModel) {
+async function deleteUser(userData: UserModel, token: string) {
     try {
-        await UserService.delete(userData.getId!)
+        await UserService.delete(userData.getId!, token)
 
         Toast.show({
             type: 'success',
@@ -63,8 +63,8 @@ function Option({ description, iconName, iconType, colorBackgroundGradient, onPr
             <View style={styles.optionGo}>
                 {showSwitch ? (
                     <Switch
-                        style={{margin: 0}}
-                        trackColor={{false: theme.colorGrey, true: theme.colorGreen}}
+                        style={{ margin: 0 }}
+                        trackColor={{ false: theme.colorGrey, true: theme.colorGreen }}
                         thumbColor={theme.colorWhite}
                         ios_backgroundColor="#3e3e3e"
                         value={true}
@@ -78,7 +78,7 @@ function Option({ description, iconName, iconType, colorBackgroundGradient, onPr
 }
 
 export default function SettingsOptions() {
-    const { userData, setUserData } = useContext(UserContext) ?? { userData: null, setUserData: () => { } };
+    const { userData, token } = useContext(UserContext)!
 
     return (
         <View style={styles.container}>
@@ -114,7 +114,7 @@ export default function SettingsOptions() {
                 iconType="MaterialCommunityIcons"
                 iconName="delete-forever"
                 colorBackgroundGradient={['#BF3C3C', '#662020']}
-                onPress={async () => deleteUser(userData!)}
+                onPress={async () => deleteUser(userData!, token!)}
                 showSwitch={false}
             />
         </View>

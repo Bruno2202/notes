@@ -9,7 +9,7 @@ import Separator from "./Separator";
 export default function NotesTypes() {
 
     function navigation(route: Href) {
-        router.navigate(route);
+        router.replace(route);
     }
 
     return (
@@ -23,7 +23,7 @@ export default function NotesTypes() {
                     <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
                 </View>
             </TouchableOpacity>
-            <Separator />
+            {/* <Separator />
             <TouchableOpacity activeOpacity={0.6} style={styles.typeButton}>
                 <MaterialIcons name="checklist" size={24} color={theme.colorGrey} />
                 <Text style={styles.text}>
@@ -32,7 +32,7 @@ export default function NotesTypes() {
                 <View style={styles.arrowContainer}>
                     <MaterialIcons name={"arrow-forward-ios"} color={theme.colorGrey} size={16} />
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 }

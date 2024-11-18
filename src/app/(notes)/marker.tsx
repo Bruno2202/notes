@@ -16,26 +16,16 @@ interface FlatListTypes {
 }
 
 export default function Marker() {
-    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-    const [marker, setMarker] = useState<MarkerModel | null>(null);
     const [newMarker, setNewMarker] = useState<string>('');
 
-    const { userData, token } = useContext(UserContext) ?? { userData: null, token: undefined };
-    const { markers, setMarkers } = useContext(NoteContext) ?? {
-        markers: [],
-        setMarkers: () => { },
-    };
+    const { userData, token } = useContext(UserContext)!
+    const { markers, setMarkers } = useContext(NoteContext)!
 
     async function handleDeleteMarker(marker: MarkerModel) {
         await MarkerController.deleteMarker(token!, marker.getId!);
         const markers = await MarkerController.fetchMarkers(token!, userData!);
         setMarkers(markers);
     }
-
-    function handleFocus(item: MarkerModel) {
-        setFocusedIndex(item.getId!);
-        setMarker(item)
-    };
 
     function handleDescriptionChange(index: number, text: string) {
         if (markers) {
@@ -50,10 +40,6 @@ export default function Marker() {
         const markers = await MarkerController.fetchMarkers(token!, userData!);
         setMarkers(markers);
         setNewMarker('');
-    };
-
-    function handleBlur() {
-        setFocusedIndex(null);
     };
 
     return (
@@ -83,8 +69,6 @@ export default function Marker() {
                     keyExtractor={(item) => item.getId!.toString()}
                     renderItem={({ item, index }: FlatListTypes) => {
                         if (item) {
-                            const isFocused = focusedIndex === index;
-
                             return (
                                 <View style={styles.markersContainer}>
                                     <View style={styles.markerInput}>
@@ -92,8 +76,6 @@ export default function Marker() {
                                             placeholder="Marcador"
                                             value={item.getDescription}
                                             icon="label"
-                                            onFocus={() => handleFocus(item)}
-                                            onBlur={handleBlur}
                                             onChangeText={(text: string) => handleDescriptionChange(index, text)}
                                         />
                                     </View>
@@ -115,7 +97,7 @@ export default function Marker() {
                     contentContainerStyle={{ paddingBottom: 120 }}
                 />
             ) : (
-                <NotFoundCat 
+                <NotFoundCat
                     text="Pra que marcadores, não é mesmo?"
                     subtext="(Você não possui marcadores)"
                 />

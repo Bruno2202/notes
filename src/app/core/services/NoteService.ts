@@ -1,50 +1,13 @@
 import { MarkerModel } from "../models/MarkerModel";
 import { NoteModel } from "../models/NoteModel";
 
-interface NoteTypes {
-    userId: number
-    typeId: number
-    creationDate: Date
-    id: number
-    title: string
-    content: string
-    markers: MarkerType[]
-}
-
-interface MarkerType {
-    userId: number
-    description: string
-    id: number
-}
-
 export class NoteService {
-    // static async selectAllUsersNotes(token: string) {
-    //     try {
-    //         const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`,
-    //             {
-    //                 method: 'GET',
-    //                 headers: {
-    //                     'Authorization': token,
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             }
-    //         );
-
-    //         const data = await response.json();
-
-    //         console.log('Resposta da API:', data);
-    //     } catch (error: any) {
-    //         console.error('Erro na requisição:', error.message);
-    //     }
-    // }
-
-    static async selectById(token: string, id: number): Promise<NoteModel | null> {
+    static async selectById(token: string, id: string): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json',
                 },
             });
 
@@ -67,20 +30,19 @@ export class NoteService {
         }
     }
 
-    static async selectByUserId(token: string, id: number): Promise<NoteModel[]> {
+    static async selectByUserId(token: string, id: string): Promise<NoteModel[]> {
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json',
                 },
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                const completeNotes: NoteModel[] = data.map((item: NoteTypes) => {
+                const notes: NoteModel[] = data.map((item: any) => {
                     const note = new NoteModel(
                         item.userId,
                         item.typeId,
@@ -88,22 +50,20 @@ export class NoteService {
                         item.id,
                         item.title,
                         item.content,
+                        item.color,
+                        item.markers.map((marker: any) => {
+                            return new MarkerModel(
+                                marker.userId,
+                                marker.description,
+                                marker.id
+                            )
+                        })
                     );
-
-                    const markers: MarkerModel[] = item.markers.map((marker: MarkerType) => {
-                        return new MarkerModel(
-                            marker.userId,
-                            marker.description,
-                            marker.id
-                        )
-                    })
-
-                    note.setMarkers = markers;
 
                     return note;
                 });
 
-                return completeNotes;
+                return notes;
             }
 
             return [];
@@ -114,7 +74,7 @@ export class NoteService {
 
     static async create(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note`, {
                 method: 'POST',
                 headers: {
                     'Authorization': token,
@@ -139,7 +99,7 @@ export class NoteService {
 
     static async update(token: string, note: NoteModel): Promise<NoteModel | null> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': token,
@@ -169,13 +129,12 @@ export class NoteService {
         }
     }
 
-    static async delete(token: string, id: number): Promise<boolean> {
+    static async delete(token: string, id: string): Promise<boolean> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json',
                 },
             });
 
@@ -189,6 +148,58 @@ export class NoteService {
             return false;
         } catch (error: any) {
             console.error(`Erro ao deletar nota: ${error.message}`);
+            throw new Error(error.message);
+        }
+    }
+
+    static async addMarkerToNote(noteId: string, markerId: string, token: string) {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note/${noteId}/marker/${markerId}/add`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': token,
+                },
+            });
+
+            if (!response.ok) {
+                let data;
+                try {
+                    data = await response.json();
+                } catch (error) {
+                    throw new Error(`Erro ao salvar marcador na nota: ${response.statusText}`);
+                }
+                console.error(`Erro ao salvar marcador na nota: ${data.error}`);
+                throw new Error(data.message);
+            }
+
+            return;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    static async removeMarkerFromNote(noteId: string, markerId: string, token: string) {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/note/${noteId}/marker/${markerId}/remove`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': token,
+                },
+            });
+
+            if (!response.ok) {
+                let data;
+                try {
+                    data = await response.json();
+                } catch (error) {
+                    throw new Error(`Erro ao deletar marcador da nota: ${response.statusText}`);
+                }
+                console.error(`Erro ao deletar marcador da nota: ${data.error}`);
+                throw new Error(data.message);
+            }
+
+            return;
+        } catch (error: any) {
             throw new Error(error.message);
         }
     }

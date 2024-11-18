@@ -1,13 +1,7 @@
 import { MarkerModel } from "../models/MarkerModel";
 
-interface MarkerTypes {
-    userId: number;
-    description: string;
-    id: number;
-}
-
 export class MarkerService {
-    static async selectById(token: string, id: number): Promise<MarkerModel | null> {
+    static async selectById(token: string, id: string): Promise<MarkerModel | null> {
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'GET',
@@ -33,9 +27,9 @@ export class MarkerService {
         }
     }
 
-    static async selectByUserId(token: string, id: number): Promise<MarkerModel[]> {
+    static async selectByUserId(token: string, id: string): Promise<MarkerModel[]> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/user/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/markers/user/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -47,7 +41,7 @@ export class MarkerService {
 
             if (response.ok) {
                 if (data.length > 0) {
-                    const markers = data.map((marker: MarkerTypes) => {
+                    const markers = data.map((marker: any) => {
                         return new MarkerModel(
                             marker.userId,
                             marker.description,
@@ -67,9 +61,9 @@ export class MarkerService {
         }
     }
 
-    static async selectByNoteId(token: string, id: number): Promise<MarkerModel[]> {
+    static async selectByNoteId(token: string, id: string): Promise<MarkerModel[]> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/note/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/markers/note/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': token,
@@ -80,7 +74,7 @@ export class MarkerService {
             const data = await response.json();
 
             if (response.ok) {
-                const markers = data.map((marker: MarkerTypes) => {
+                const markers = data.map((marker: any) => {
                     return new MarkerModel(
                         marker.userId,
                         marker.description,
@@ -151,25 +145,26 @@ export class MarkerService {
         }
     }
 
-    static async delete(token: string, id: number) {
+    static async delete(token: string, id: string) {
+        console.log(id)
+
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': token,
-                    'Content-Type': 'application/json',
                 },
             });
 
             if (!response.ok) {
                 const data = await response.json();
-                console.error(`Erro ao deletar nota: ${data?.error || 'Erro desconhecido'}`);
+                console.log(data)
                 throw new Error(data?.message || 'Erro ao deletar marcador');
             }
 
             return;
         } catch (error: any) {
-            console.error(`Erro ao deletar nota: ${error.message}`);
+            console.error(`Erro ao deletar marcador: ${error.message}`);
             throw new Error(error.message);
         }
     }

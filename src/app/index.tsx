@@ -39,7 +39,7 @@ export default function Page() {
     return (
         <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             {isSignedIn ? (
-                <Redirect href="/(tabs)" />
+                <Redirect href="/(drawer)/(tabs)" />
             ) : (
                 <Redirect href="/(auth)" />
             )}

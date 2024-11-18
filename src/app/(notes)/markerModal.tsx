@@ -6,17 +6,16 @@ import { FlatList } from "react-native";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { MarkerModel } from "../core/models/MarkerModel";
 import { MarkerController } from "../core/controllers/MarkerController";
-import Button from "@/src/components/Button";
-import NotesMarkersController from "../core/controllers/NotesMarkersController";
 import NotFoundCat from "@/src/components/NotFoundCat";
 import { UserContext } from "@/src/contexts/UserContext";
+import { NoteController } from "../core/controllers/NoteController";
 
 interface FlatListTypes {
     item: MarkerModel;
 }
 
 export default function MarkerModal() {
-    const [checkedItems, setCheckedItems] = useState<{ [key: number]: boolean }>({});
+    const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
     const [noteMarkers, setNoteMarkers] = useState<MarkerModel[]>([]);
 
     const { note, markers } = useContext(NoteContext) ?? { note: null, markers: [] }
@@ -35,7 +34,7 @@ export default function MarkerModal() {
             const updatedCheckedItems: { [key: string]: boolean } = {};
 
             for (let i = 0; i < markers.length; i++) {
-                const markerId: number | undefined = markers[i].getId;
+                const markerId: string | undefined = markers[i].getId;
                 const foundMarker: MarkerModel | undefined = noteMarkers.find(marker => marker.getId == markerId);
 
                 if (foundMarker) {
@@ -49,21 +48,21 @@ export default function MarkerModal() {
         }
     }
 
-    async function fetchNoteMarkers(noteId: number) {
+    async function fetchNoteMarkers(noteId: string) {
         const markers = await MarkerController.fetchNoteMarkers(token!, noteId);
         setNoteMarkers(markers);
     }
 
-    async function handleMark(marked: boolean, noteId: number, markerId: number) {
+    async function handleMark(marked: boolean, noteId: string, markerId: string) {
         if (marked) {
-            NotesMarkersController.createNoteMarker(noteId, markerId);
+            NoteController.addMarkerToNote(noteId, markerId, token!);
             return;
         } else {
-            NotesMarkersController.deleteNoteMarker(noteId, markerId);
+            NoteController.removeMarkerFromNote(noteId, markerId, token!);
         }
     }
 
-    const toggleCheckbox = (id: number) => {
+    const toggleCheckbox = (id: string) => {
         setCheckedItems(prevState => {
             const updatedState = { ...prevState, [id]: !prevState[id] };
             handleMark(updatedState[id], note?.getId!, id);
@@ -89,7 +88,7 @@ export default function MarkerModal() {
                                 <Checkbox
                                     style={styles.checkbox}
                                     value={isChecked}
-                                    onValueChange={() => toggleCheckbox(Number(itemId))}
+                                    onValueChange={() => toggleCheckbox(itemId)}
                                     color={isChecked ? theme.colorBlue : theme.colorGrey}
                                 />
                                 <Text style={styles.text}>
@@ -101,7 +100,7 @@ export default function MarkerModal() {
                     contentContainerStyle={{ paddingBottom: 120 }}
                 />
             ) : (
-                <NotFoundCat 
+                <NotFoundCat
                     text="Parece que alguém está precisando de marcadores..."
                     subtext="(Crie um marcador para utilizá-lo na nota)"
                 />

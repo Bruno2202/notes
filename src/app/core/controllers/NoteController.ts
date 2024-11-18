@@ -34,9 +34,7 @@ export class NoteController {
 
 	static async fetchNotes(token: string, user: UserModel): Promise<NoteModel[]> {
 		try {
-			const notes = await NoteService.selectByUserId(token, user?.getId!);
-
-			return notes;
+			return await NoteService.selectByUserId(token, user?.getId!);
 		} catch (error: any) {
 			switch (error.message) {
 				case 'Notas não encontradas':
@@ -65,7 +63,7 @@ export class NoteController {
 		}
 	}
 
-	static async deleteNote(token: string, id: number) {
+	static async deleteNote(token: string, id: string) {
 		try {
 			const deleted = await NoteService.delete(token, id);
 
@@ -81,6 +79,22 @@ export class NoteController {
 				type: 'error',
 				text1: 'Não foi possível excluir nota',
 			});
+		}
+	}
+
+	static async addMarkerToNote(noteId: string, markerId: string, token: string) {
+		try {
+			await NoteService.addMarkerToNote(noteId, markerId, token);
+		} catch (error: any) {
+			console.log(`Erro ao salvar marcador na nota: ${error.message}`);
+		}
+	}
+
+	static async removeMarkerFromNote(noteId: string, markerId: string, token: string) {
+		try {
+			await NoteService.removeMarkerFromNote(noteId, markerId, token);
+		} catch (error: any) {
+			console.log(`Erro ao deletar marcador na nota: ${error.message}`);
 		}
 	}
 }

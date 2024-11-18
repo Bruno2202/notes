@@ -1,19 +1,19 @@
 import { Text, View, StyleSheet, ImageBackground, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Href, Link, router } from "expo-router";
 import { useContext, useState } from "react";
-import Toast from "react-native-toast-message";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
-import { AuthService } from "../core/services/AuthService";
 import { TokenService } from "../core/services/TokenService";
-import { UserModel } from "../core/models/UserModel";
 import { theme } from "@/theme";
+import { UserContext } from "@/src/contexts/UserContext";
+import { LoadingContext } from "@/src/contexts/LoadingContext";
+import { AuthController } from "../core/controllers/AuthControllers";
 
 import PasswordInput from "../../components/PasswordInput";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { UserContext } from "@/src/contexts/UserContext";
 import LoadingView from "@/src/components/LoadingView";
-import { LoadingContext } from "@/src/contexts/LoadingContext";
+
 
 export default function SignIn() {
     const { setToken } = useContext(UserContext) ?? { setToken: () => { } };
@@ -22,52 +22,35 @@ export default function SignIn() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const loginToast = () => {
-        Toast.show({
-            type: 'error',
-            text1: 'Não foi possível fazer login',
-            text2: 'Verifique suas credenciais'
-        });
-    }
+    const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
+    const animatedStyles = useAnimatedStyle(() => ({
+        transform: [{ translateY: -keyboard.height.value * 0.5 }],
+    }));
 
     const navigation = (route: Href) => {
         router.replace(route);
     }
 
     async function handleLogin() {
+        Keyboard.dismiss();
         setLoading(true);
 
-        try {
-            const result = await AuthService.login(email, password);
+        const res = await AuthController.login(email, password);
+        setLoading(false);
 
-            if (result) {
-                const token = await TokenService.createToken(result)
-                setLoading(false);
+        if (res.success) {
+            await TokenService.storeToken(res.token!);
+            setToken(res.token);
 
-                if (token) {
-                    await TokenService.storeToken(token);
-                    setToken(token);
-
-                    navigation('/(tabs)/');
-                }
-            } else {
-                setLoading(false);
-                loginToast();
-            }
-        } catch (error: any) {
-            setLoading(false);
-            console.log(`Erro ao fazer login: ${error.message}`);
+            navigation('/(tabs)/');
         }
     }
 
     return (
-        <>
+        <View style={{ flex: 1, backgroundColor: theme.colorBlack }}>
             <LoadingView />
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                <KeyboardAvoidingView
-                    style={styles.container}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                >
+                <Animated.View style={[styles.container, animatedStyles]}>
                     <ImageBackground
                         resizeMode="cover"
                         source={require("../../../assets/images/rectangle.png")}
@@ -89,9 +72,9 @@ export default function SignIn() {
                             <Text style={styles.textFocus}>CADASTRE-SE</Text>
                         </Link>
                     </View>
-                </KeyboardAvoidingView>
+                </Animated.View>
             </TouchableWithoutFeedback>
-        </>
+        </View>
     );
 }
 

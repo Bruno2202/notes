@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Text, View, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
 import { theme } from "@/theme";
 import { UserModel } from "../core/models/UserModel";
@@ -18,6 +19,8 @@ export default function SignUp() {
     const [confPassword, setConfPassowrd] = useState<string>('');
 
     async function nextStep() {
+        Keyboard.dismiss();
+
         if (!name || !email || !password || !confPassword) {
             Toast.show({
                 type: 'error',
@@ -32,6 +35,7 @@ export default function SignUp() {
             });
         } else {
             const user = new UserModel(name, email, password);
+
             try {
                 const isValid = await UserService.validateFields(user);
 
@@ -50,34 +54,39 @@ export default function SignUp() {
         }
     }
 
+    const keyboard = useAnimatedKeyboard({ isStatusBarTranslucentAndroid: true });
+    const animatedStyles = useAnimatedStyle(() => ({
+        transform: [{ translateY: -keyboard.height.value * 0.5 }],
+    }));
+
     return (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-            >
-                <Text style={styles.title}>
-                    Cadastro
-                </Text>
-                <View style={styles.forms}>
-                    <Input placeholder="Nome de usuário" icon={"person"} onChangeText={setName} maxLength={25} />
-                    <Input placeholder="Email" icon={"mail-outline"} onChangeText={setEmail} />
-                    <PasswordInput placeholder="Senha" onChangeText={setPassword} canView={true} />
-                    <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} canView={false} />
-                    <View style={styles.next}>
-                        <Button onPress={nextStep} text={"AVANÇAR"} />
-                        <Link style={styles.signIn} href={"/"}>
-                            <Text>Já possui uma conta? </Text>
-                            <Text style={styles.textFocus}>ENTRAR</Text>
-                        </Link>
+        <View style={{ flex: 1, backgroundColor: theme.colorBlack }}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} style={{ flex: 1, backgroundColor: theme.colorBlack }}>
+                <Animated.View style={[styles.container, animatedStyles]}>
+                    <Text style={styles.title}>
+                        Cadastro
+                    </Text>
+                    <View style={styles.forms}>
+                        <Input placeholder="Nome de usuário" icon={"person"} onChangeText={setName} maxLength={25} />
+                        <Input placeholder="Email" icon={"mail-outline"} onChangeText={setEmail} />
+                        <PasswordInput placeholder="Senha" onChangeText={setPassword} canView={true} />
+                        <PasswordInput placeholder="Confirmar senha" onChangeText={setConfPassowrd} canView={false} />
+                        <View style={styles.next}>
+                            <Button onPress={nextStep} text={"AVANÇAR"} />
+                            <Link style={styles.signIn} href={"/"}>
+                                <Text>Já possui uma conta? </Text>
+                                <Text style={styles.textFocus}>ENTRAR</Text>
+                            </Link>
+                        </View>
                     </View>
-                </View>
-            </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+
     container: {
         paddingHorizontal: theme.paddingHorizontal,
         flex: 1,

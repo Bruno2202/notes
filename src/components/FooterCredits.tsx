@@ -1,7 +1,7 @@
 import { theme } from "@/theme";
 import { View, Text, StyleSheet } from "react-native"
 
-export default function FeedPostsFooter() {
+export default function FooterCredits() {
     function getYear(): number {
         const date: Date = new Date();
         return date.getFullYear();

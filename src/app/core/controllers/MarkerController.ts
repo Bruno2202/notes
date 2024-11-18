@@ -51,7 +51,7 @@ export class MarkerController {
         }
     }
 
-    static async fetchNoteMarkers(token: string, id: number): Promise<MarkerModel[]> {
+    static async fetchNoteMarkers(token: string, id: string): Promise<MarkerModel[]> {
         try {
             const markers = await MarkerService.selectByNoteId(token, id);
 
@@ -87,7 +87,7 @@ export class MarkerController {
         }
     }
 
-    static async deleteMarker(token: string, id: number) {
+    static async deleteMarker(token: string, id: string) {
         try {
             await MarkerService.delete(token, id);
         } catch (error: any) {

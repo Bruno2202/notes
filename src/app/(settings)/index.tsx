@@ -2,7 +2,7 @@ import { theme } from "@/theme";
 import { Text, View, StyleSheet } from "react-native";
 import SettingsOptions from "@/src/components/SettingsOptions";
 import { Image } from "expo-image";
-import FeedPostsFooter from "@/src/components/FooterCredits";
+import FooterCredits from "@/src/components/FooterCredits";
 
 export default function Settings() {
     return (
@@ -16,7 +16,7 @@ export default function Settings() {
                     style={styles.cat}
                     source={require('../../../assets/images/cat.png')}
                 />
-                <FeedPostsFooter />
+                <FooterCredits />
             </View>
         </View>
     );

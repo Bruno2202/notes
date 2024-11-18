@@ -1,37 +1,25 @@
 import { UserModel } from "../models/UserModel";
 
-interface UserResponse {
-    name: string;
-    email: string;
-    password: string;
-    id: number;
-    userPic: string | null;
-}
-
 export class UserService {
-    static async selectById(id: number): Promise<UserModel | null> {
+    static async selectById(id: string, token: string): Promise<UserModel | null> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/id/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/user/${id}`, {
                 method: 'GET',
+                headers: {
+                    'Authorization': token,
+                }
             });
 
             if (response.ok) {
                 const data = await response.json();
 
-                const user: UserResponse = {
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                    id: data.id,
-                    userPic: data.userPic
-                }
-
                 return new UserModel(
-                    user.name,
-                    user.email,
-                    user.password,
-                    user.id,
-                    user.userPic
+                    data.name,
+                    data.email,
+                    data.password,
+                    data.creationDate,
+                    data.id,
+                    data.userPic,
                 );
             }
 
@@ -43,10 +31,11 @@ export class UserService {
 
     static async validateFields(user: UserModel): Promise<boolean> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/validar`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/user/validate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
                 },
                 body: JSON.stringify({
                     user: user,
@@ -65,36 +54,13 @@ export class UserService {
         }
     }
 
-    static async register(user: UserModel): Promise<UserModel | null> {
+    static async update(user: UserModel, token: string): Promise<UserModel | null> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user: user,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                return data;
-            }
-
-            throw new Error(data.error);
-        } catch (error: any) {
-            throw new Error(error.message);
-        }
-    }
-
-    static async update(user: UserModel): Promise<UserModel | null> {
-        try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/user`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token,
                 },
                 body: JSON.stringify({
                     user: user,
@@ -104,20 +70,13 @@ export class UserService {
             const data = await response.json();
 
             if (response.ok) {
-                const user: UserResponse = {
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                    id: data.id,
-                    userPic: data.userPic
-                }
-
                 return new UserModel(
-                    user.name,
-                    user.email,
-                    user.password,
-                    user.id,
-                    user.userPic
+                    data.name,
+                    data.email,
+                    data.password,
+                    data.creationDate,
+                    data.id,
+                    data.userPic
                 );
             }
 
@@ -127,12 +86,12 @@ export class UserService {
         }
     }
 
-    static async delete(id: number): Promise<boolean> {
+    static async delete(id: string, token: string): Promise<boolean> {
         try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/usuarios/${id}`, {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/user/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Authorization': token,
                 },
             });
 

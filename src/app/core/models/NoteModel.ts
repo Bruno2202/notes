@@ -1,43 +1,42 @@
 import { MarkerModel } from "./MarkerModel";
 
 export class NoteModel {
-    private id?: number;
-    private userId: number;
+    private id?: string;
+    private userId: string;
     private typeId: number;
-    private title?: string;
-    private content?: string;
+    private title?: string | null;
+    private content?: string | null;
     private creationDate: Date;
-    private markers?: MarkerModel[];
+    private color?: string;
+    private markers?: MarkerModel[]
 
-    constructor(userId: number, noteTypeId: number, creationDate: Date, id?: number, title?: string, content?: string, markers?: MarkerModel[]);
-    constructor(note: NoteModel);
-    constructor(arg: number | NoteModel, typeId?: number, creationDate?: Date, id?: number, title?: string, content?: string, markers?: MarkerModel[]) {
-        if (typeof arg === "number") {
-            this.userId = arg;
-            this.typeId = typeId!;
-            this.creationDate = creationDate!;
-            this.id = id;
-            this.title = title;
-            this.content = content;
-            this.markers = markers;
-        } else {
-            const note = arg as NoteModel;
-            this.userId = note.userId;
-            this.typeId = note.typeId;
-            this.creationDate = note.creationDate;
-            this.id = note.id;
-            this.content = note.content;
-            this.title = note.title;
-            this.markers = note.markers;
-        }
+    constructor(
+        userId: string,
+        typeId: number,
+        creationDate: Date,
+        id?: string,
+        title?: string | null,
+        content?: string | null,
+        color?: string,
+        markers?: MarkerModel[]
+    ) {
+        this.userId = userId;
+        this.typeId = typeId;
+        this.creationDate = creationDate;
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.color = color;
+        this.markers = markers;
     }
 
-    set setId(id: number) { this.id = id; }
-    set setUserId(userId: number) { this.userId = userId; }
+    set setId(id: string) { this.id = id; }
+    set setUserId(userId: string) { this.userId = userId; }
     set setTypeId(typeId: number) { this.typeId = typeId; }
-    set setTitle(title: string) { this.title = title; }
-    set setContent(content: string) { this.content = content; }
+    set setTitle(title: string | null) { this.title = title; }
+    set setContent(content: string | null) { this.content = content; }
     set setCreationDate(creationDate: Date) { this.creationDate = creationDate; }
+    set setColor(color: string) { this.color = color; }
     set setMarkers(markers: MarkerModel[]) { this.markers = markers; }
 
     get getId() { return this.id; }
@@ -46,5 +45,6 @@ export class NoteModel {
     get getTitle() { return this.title; }
     get getContent() { return this.content; }
     get getCreationDate() { return this.creationDate; }
+    get getColor() { return this.color; }
     get getMarkers() { return this.markers; }
 }

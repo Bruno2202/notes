@@ -17,7 +17,7 @@ type Props = PropsWithChildren<{
 
 export default function BottomModal({ title, isVisible, onClose }: Props) {
 	const { notes, setNotes } = useContext(NoteContext)!
-	const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!
+	const { filterIsVisible } = useContext(ModalContext)!
 
 	function sortNotesAscending() {
 		const ascendingNotes: NoteModel[] = notes.sort(
@@ -46,12 +46,14 @@ export default function BottomModal({ title, isVisible, onClose }: Props) {
 						</TouchableOpacity>
 					</View>
 					<Separator />
-					<TouchableOpacity onPress={() => sortNotesAscending()}>
-						<Text style={styles.modalTextOpiton}>Data decrescente</Text>
-					</TouchableOpacity>
-					<TouchableOpacity onPress={() => sortNotesDescending()}>
-						<Text style={styles.modalTextOpiton}>Data crescente</Text>
-					</TouchableOpacity>
+					<View style={styles.optionContainer}>
+						<TouchableOpacity onPress={() => sortNotesAscending()}>
+							<Text style={styles.modalTextOpiton}>Data Crescente</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => sortNotesDescending()}>
+							<Text style={styles.modalTextOpiton}>Data Decrescente</Text>
+						</TouchableOpacity>
+					</View>
 				</Animated.View>
 				<OpacityOverlay onPress={onClose} />
 			</>
@@ -86,7 +88,17 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	modalTextOpiton: {
-		fontFamily: 'fontFamilyRegular',
-		color: theme.colorGrey
+		fontFamily: 'fontFamilySemiBold',
+		color: theme.colorGrey,
+		fontSize: 16,
+		backgroundColor: theme.colorMediumGrey,
+		padding: 8,
+		borderRadius: 8,
+	},
+	optionContainer: {
+		gap: 20,
+		padding: 20,
+		flex: 1,
+		justifyContent: 'center',
 	}
 });

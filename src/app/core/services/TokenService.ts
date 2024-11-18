@@ -1,43 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { UserModel } from '../models/UserModel';
-
 export interface TokenDataTypes {
-    id: number;
+    id: string;
     email: string;
     iat: number;
     exp?: number;
 }
 
 export class TokenService {
-    static async createToken(user: UserModel): Promise<string | undefined> {
-        try {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/token/generate`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user: {
-                        id: user.getId,
-                        email: user.getEmail,
-                    }
-                }),
-            });
-
-            const data = await response.json();
-            
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            
-            return data.token;
-        } catch (error: any) {
-            console.log(error.message);
-        }
-    }
-
     static async getTokenData(token: string): Promise<TokenDataTypes | undefined> {
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/token/data`, {

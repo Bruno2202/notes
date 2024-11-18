@@ -1,15 +1,15 @@
-import { View, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
-import ColorOptions from "@/src/components/ColorOptions";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
 export default function Note() {
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
-    const [noteId, setNoteId] = useState<number | undefined>(undefined);
+    const [noteId, setNoteId] = useState<string | undefined>(undefined);
 
     const { userData } = useContext(UserContext) ?? { userData: null };
     const { note, setNote } = useContext(NoteContext) ?? {
@@ -40,44 +40,50 @@ export default function Note() {
         }
     }, [userData, title, content]);
 
+    const keyboard = useAnimatedKeyboard({
+        isStatusBarTranslucentAndroid: true
+    });
+    const animatedStyles = useAnimatedStyle(() => ({
+        marginBottom: keyboard.height.value * 0.5
+    }));
+
     return (
-            <View style={styles.container}>
-                <TextInput
-                    multiline
-                    style={styles.noteTitle}
-                    onChangeText={setTitle}
-                    placeholder="Título"
-                    placeholderTextColor={theme.colorMediumGrey}
-                    selectionColor={theme.colorBlue}
-                    value={title}
-                />
-                <TextInput
-                    multiline
-                    style={styles.noteContent}
-                    onChangeText={setContent}
-                    placeholder="Escreva aqui..."
-                    placeholderTextColor={theme.colorMediumGrey}
-                    textAlignVertical="top"
-                    selectionColor={theme.colorBlue}
-                    value={content}
-                />
-            </View>
+        <Animated.View style={[styles.container]}>
+            <TextInput
+                multiline
+                style={styles.noteTitle}
+                onChangeText={setTitle}
+                placeholder="Título"
+                placeholderTextColor={theme.colorMediumGrey}
+                selectionColor={theme.colorBlue}
+                value={title}
+            />
+            <TextInput
+                multiline
+                style={styles.noteContent}
+                onChangeText={setContent}
+                placeholder="Escreva aqui..."
+                placeholderTextColor={theme.colorMediumGrey}
+                textAlignVertical="top"
+                selectionColor={theme.colorBlue}
+                value={content}
+            />
+        </Animated.View>
     );
 }
 
 const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
+    keyboardAvoidingContainer: {
+        flex: 1,
     },
     container: {
         paddingHorizontal: theme.paddingHorizontal,
         backgroundColor: theme.colorBlack,
-        height: '100%',
+        flex: 1,
+        position: 'relative'
     },
-    icons: {
+    scrollContainer: {
+        paddingBottom: 20,
     },
     noteTitle: {
         fontFamily: 'fontFamilySemiBold',
@@ -86,9 +92,14 @@ const styles = StyleSheet.create({
     },
     noteContent: {
         fontFamily: 'fontFamilyRegular',
-        height: '100%',
         marginTop: 12,
         color: theme.colorGrey,
         fontSize: 16,
+        minHeight: 100,
+        height: 'auto',
     },
+    teste: {
+        width: '100%',
+        backgroundColor: theme.colorBlue,
+    }
 });

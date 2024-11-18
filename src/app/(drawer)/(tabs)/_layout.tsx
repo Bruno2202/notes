@@ -14,8 +14,7 @@ export default function TabLayout() {
     const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!;
 
     return (
-        <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
-            <StatusBar backgroundColor={theme.colorBlack} />
+        <>
             <Tabs
                 screenOptions={{
                     tabBarStyle: {
@@ -26,7 +25,7 @@ export default function TabLayout() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        zIndex: 1,
+                        zIndex: 2,
                     },
                     tabBarActiveTintColor: theme.colorWhite,
                     tabBarInactiveTintColor: theme.colorGrey,
@@ -34,7 +33,7 @@ export default function TabLayout() {
                 }}
             >
                 <Tabs.Screen
-                    name="(drawer)"
+                    name="index"
                     options={{
                         tabBarShowLabel: false,
                         headerShown: false,
@@ -70,6 +69,6 @@ export default function TabLayout() {
                 onClose={() => setFilterIsVisible(!filterIsVisible)}
             />
             <TabBarGradient />
-        </View>
+        </>
     );
 }

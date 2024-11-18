@@ -3,21 +3,22 @@ import { router } from 'expo-router';
 import { TokenService } from './TokenService';
 import { UserModel } from '../models/UserModel';
 
-interface UserResponse {
-    name: string;
-    email: string;
-    password: string;
-    id: number;
-    userPic: string | null;
+export interface authResponse {
+    success: boolean;
+    message?: string;
+    error?: string;
+    user?: UserModel;
+    token?: string;
 }
 
 export class AuthService {
-    static async login(email: string, password: string): Promise<UserModel | null> {
+    static async login(email: string, password: string): Promise<authResponse> {
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
                 },
                 body: JSON.stringify({
                     user: {
@@ -27,27 +28,26 @@ export class AuthService {
                 }),
             });
 
-            const data = await response.json();
+            return await response.json();
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
 
-            if (data.user) {
-                const user: UserResponse = {
-                    name: data.user.name,
-                    email: data.user.email,
-                    password: data.user.password,
-                    id: data.user.id,
-                    userPic: data.user.userPic
-                }
-
-                return new UserModel(
-                    user.name,
-                    user.email,
-                    user.password,
-                    user.id,
-                    user.userPic
-                );
-            }
-
-            return null;
+    static async register(user: UserModel): Promise<authResponse> {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': process.env.EXPO_PUBLIC_SECRET!,
+                },
+                body: JSON.stringify({
+                    user: user,
+                }),
+            });
+            
+            return await response.json();
         } catch (error: any) {
             throw new Error(error.message);
         }
@@ -56,7 +56,7 @@ export class AuthService {
     static async logout() {
         try {
             await TokenService.removeToken();
-            router.replace('../(auth)');
+            router.replace('/(auth)');
         } catch (error) {
             console.log(`Erro ao realizar logout: ${error}`)
         }

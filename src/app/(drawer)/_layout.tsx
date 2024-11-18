@@ -7,12 +7,9 @@ import { ReactNode, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import TabBarGradient from '@/src/components/TabBarGradient';
-
-interface LayoutProps {
-    children: ReactNode;
-}
+import { useNavigationState } from '@react-navigation/native';
 
 function DrawerContent() {
     const { markers, setMarkers } = useContext(NoteContext) ?? {
@@ -82,7 +79,13 @@ function DrawerContent() {
     );
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout() {
+    const segments = useSegments();
+    const isDrawerDisabled = 
+        JSON.stringify(segments) === JSON.stringify(["(drawer)", "(tabs)"]) ||
+        JSON.stringify(segments) === JSON.stringify(["(notes)", "marker"]) ||
+        JSON.stringify(segments) === JSON.stringify(["(notes)", "note"]) 
+
     return (
         <GestureHandlerRootView style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             <Drawer
@@ -93,7 +96,6 @@ export default function Layout({ children }: LayoutProps) {
                     drawerStyle: {
                         backgroundColor: theme.colorDarkGrey,
                         width: 240,
-                        zIndex: 99
                     },
                     drawerActiveTintColor: theme.colorBlue,
                     drawerInactiveTintColor: theme.colorGrey,
@@ -102,9 +104,16 @@ export default function Layout({ children }: LayoutProps) {
                         shadowColor: 'transparent',
                     },
                     title: '',
+                    headerShown: isDrawerDisabled,
+                    swipeEnabled: isDrawerDisabled
                 }}
             >
-                {children}
+                <Drawer.Screen
+                    name='(tabs)'
+                    options={{
+                        drawerType: 'slide',
+                    }}
+                />
             </Drawer>
         </GestureHandlerRootView>
     );

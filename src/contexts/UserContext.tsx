@@ -40,13 +40,14 @@ export default function UserProvider({ children }: UserProviderProps) {
         async function fetchUserData() {
             if (tokenData?.id) {
                 try {
-                    const data = await UserService.selectById(tokenData.id);
+                    const data = await UserService.selectById(tokenData.id, token!);
 
                     if (data) {
                         const user = new UserModel(
                             data.getName,
                             data.getEmail,
                             data.getPassword,
+                            data.getCreationDate,
                             data.getId,
                             data.getUserPic
                         );

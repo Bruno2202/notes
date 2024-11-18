@@ -1,48 +1,59 @@
 import { Text, View, StyleSheet } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
-import { UserService } from "../core/services/UserService";
 import { UserModel } from "../core/models/UserModel";
-import { ImageModel } from "../core/models/ImageModel";
 import { theme } from "@/theme";
+import { LoadingContext } from "@/src/contexts/LoadingContext";
+import { AuthController } from "../core/controllers/AuthControllers";
 
 import Button from "../../components/Button";
 import PicInput from "@/src/components/PicInput";
 
-export default function UserPic() { 
+
+export default function UserPic() {
     const [userPic, setUserPic] = useState<string | null>(null);
+
     const { name, email, password } = useLocalSearchParams();
+    const { setLoading } = useContext(LoadingContext)!
 
     const nameStr = Array.isArray(name) ? name[0] : name;
     const emailStr = Array.isArray(email) ? email[0] : email;
     const passwordStr = Array.isArray(password) ? password[0] : password;
 
     async function createUser(): Promise<void> {
+        setLoading(true);
+
         const user = new UserModel(
             nameStr,
             emailStr,
             passwordStr,
+            new Date(),
             undefined,
             userPic ? userPic : null
         );
 
-        if (await UserService.register(user)) {
+        const res = await AuthController.register(user)
+        setLoading(false);
+
+        if (res.success) {
             router.navigate('/');
-            console.log("Usuário criado")
         }
     }
- 
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Foto de usuário
-            </Text>
-            <PicInput onImageSelected={setUserPic} />
-            <View style={styles.next}>
-                <Button onPress={createUser} text={"CADASTRAR"} />
+        <>
+            {/* <LoadingView /> */}
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    Foto de usuário
+                </Text>
+                <PicInput onImageSelected={setUserPic} />
+                <View style={styles.next}>
+                    <Button onPress={createUser} text={"CADASTRAR"} />
+                </View>
             </View>
-        </View>
+        </>
     );
 }
 
@@ -51,7 +62,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: theme.paddingHorizontal,
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: theme.colorBlack, 
+        backgroundColor: theme.colorBlack,
     },
     title: {
         marginTop: 52,

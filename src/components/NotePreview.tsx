@@ -6,6 +6,8 @@ import { NoteContext } from "../contexts/NoteContext";
 import { useContext } from "react";
 import { NoteModel } from "../app/core/models/NoteModel";
 import { MarkerModel } from "../app/core/models/MarkerModel";
+import { UserContext } from "../contexts/UserContext";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface PropTypes {
     noteData: NoteModel;
@@ -13,11 +15,19 @@ interface PropTypes {
 
 interface NoteMarkersPropTypes {
     markers: MarkerModel[];
+    ownerId: string;
 }
 
-function NoteMarkers({ markers }: NoteMarkersPropTypes) {
+function NoteMarkers({ markers, ownerId }: NoteMarkersPropTypes) {
+    const { userData } = useContext(UserContext)!;
+
     return (
         <View style={styles.markersContainer}>
+            {ownerId !== userData?.getId && (
+                <View style={{ ...styles.markerContainer, marginRight: 8, backgroundColor: theme.colorGreen }}>
+                    <MaterialIcons name="people-alt" size={24} color={theme.colorLightGreen} />
+                </View>
+            )}
             {markers.map((marker) => {
                 return (
                     <View key={marker.getId} style={styles.markerContainer}>
@@ -25,7 +35,7 @@ function NoteMarkers({ markers }: NoteMarkersPropTypes) {
                             {marker.getDescription}
                         </Text>
                     </View>
-                )
+                );
             })}
         </View>
     );
@@ -80,11 +90,10 @@ export default function NotePreview({ noteData }: PropTypes) {
                         {noteData.getContent}
                     </Text>
                 }
-                {noteData.getMarkers?.length! > 0 &&
-                    <NoteMarkers
-                        markers={noteData.getMarkers!}
-                    />
-                }
+                <NoteMarkers
+                    markers={noteData.getMarkers!}
+                    ownerId={noteData.getUserId!}
+                />
                 <Text style={styles.date}>
                     {handleNoteCreationDate(noteData.getCreationDate)}
                 </Text>

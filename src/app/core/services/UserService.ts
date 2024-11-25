@@ -1,6 +1,33 @@
 import { UserModel } from "../models/UserModel";
 
 export class UserService {
+    static async fetchUsers(token: string): Promise<UserModel[]> {
+        try {
+            const res = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/users`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                }
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                return data.map((user: any) => new UserModel(
+                    user.name,
+                    user.email,
+                    user.password,
+                    user.creationDate,
+                    user.id,
+                    user.userPic,
+                ));
+            }
+
+            return [];
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
     static async selectById(id: string, token: string): Promise<UserModel | null> {
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/user/${id}`, {

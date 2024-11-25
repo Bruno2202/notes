@@ -1,21 +1,31 @@
 import { Stack, useRouter } from "expo-router";
-import { TouchableOpacity, BackHandler } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { Text, View, TouchableOpacity, BackHandler } from "react-native";
 
 import { theme } from "@/theme";
+import { Image } from "expo-image";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import NoteOptions from "@/src/components/NoteOptions";
-import { NoteContext } from "@/src/contexts/NoteContext";
+import NoteProvider, { NoteContext } from "@/src/contexts/NoteContext";
 import { useContext, useEffect, useState } from "react";
 import ColorOptions from "@/src/components/ColorOptions";
+import { UserContext } from "@/src/contexts/UserContext";
 
 export default function Layout() {
     const [colorVisible, setColorVisible] = useState<boolean>(false);
     const [color, setColor] = useState<string>("");
 
+    const { note } = useContext(NoteContext)!
+    const { noteOptionsVisible, setNoteOptionsVisible } = useContext(NoteContext)!
+
     const router = useRouter();
 
+    const handleBackPress = () => {
+        router.navigate('/(tabs)');
+    };
+
     return (
-        <>
+        <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             <Stack>
                 <Stack.Screen
                     name="note"
@@ -30,24 +40,24 @@ export default function Layout() {
                         },
                         headerTitleAlign: 'center',
                         headerBackVisible: false,
-
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => router.navigate('/(tabs)')}>
+                            <TouchableOpacity onPress={() => handleBackPress()}>
                                 <MaterialIcons color={theme.colorWhite} size={22.5} name="arrow-back" />
                             </TouchableOpacity>
                         ),
-                        headerTitle: () => (
-                            <TouchableOpacity onPress={() => setColorVisible(!colorVisible)}>
-                                <MaterialIcons color={theme.colorWhite} size={28} name="color-lens" />
-                            </TouchableOpacity>
-                        ),
+                        // headerTitle: () => (
+                        //     <TouchableOpacity onPress={() => setColorVisible(!colorVisible)}>
+                        //         <MaterialIcons color={theme.colorWhite} size={28} name="color-lens" />
+                        //     </TouchableOpacity>
+                        // ),
                         headerRight: () => {
-                            const { noteOptionsVisible, setNoteOptionsVisible } = useContext(NoteContext) ?? { noteOptionsVisible: false, setNoteOptionsVisible: () => { } };
-
                             return (
-                                <TouchableOpacity onPress={() => setNoteOptionsVisible(!noteOptionsVisible)}>
-                                    <MaterialCommunityIcons color={theme.colorWhite} size={28} name="dots-horizontal" />
-                                </TouchableOpacity>
+                                note && (
+                                    <TouchableOpacity onPress={() => setNoteOptionsVisible(!noteOptionsVisible)}>
+                                        <MaterialCommunityIcons color={theme.colorWhite} size={28} name="dots-horizontal" />
+                                    </TouchableOpacity>
+                                )
+
                             );
                         }
                     }}
@@ -55,6 +65,7 @@ export default function Layout() {
                 <Stack.Screen
                     name="marker"
                     options={{
+                        statusBarColor: theme.colorBlack,
                         headerShown: true,
                         title: '',
                         headerTintColor: theme.colorWhite,
@@ -79,9 +90,23 @@ export default function Layout() {
                         headerTitleAlign: 'center',
                     }}
                 />
+                <Stack.Screen
+                    name="shareModal"
+                    options={{
+                        presentation: 'modal',
+                        statusBarColor: theme.colorBlack,
+                        headerTintColor: theme.colorWhite,
+                        title: '',
+                        headerStyle: {
+                            backgroundColor: theme.colorBlack,
+                        },
+                        headerShadowVisible: false,
+                        headerTitleAlign: 'center',
+                    }}
+                />
             </Stack>
             {colorVisible && <ColorOptions setColor={setColor} />}
             <NoteOptions />
-        </>
+        </View>
     );
 }

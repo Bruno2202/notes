@@ -1,5 +1,15 @@
+import { NoteController } from "../controllers/NoteController";
 import { MarkerModel } from "../models/MarkerModel";
 import { NoteModel } from "../models/NoteModel";
+import { UserModel } from "../models/UserModel";
+
+export interface noteResponse {
+    success: boolean;
+    message?: string;
+    error?: string;
+    note?: NoteModel;
+    notes?: NoteModel[];
+}
 
 export class NoteService {
     static async selectById(token: string, id: string): Promise<NoteModel | null> {
@@ -199,6 +209,86 @@ export class NoteService {
             }
 
             return;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    static async shareNote(sharedBy: string, sharedWith: string, noteId: string, sharedAt: Date, token: string): Promise<noteResponse> {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/share-note`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+                body: JSON.stringify({
+                    sharedBy: sharedBy,
+                    sharedWith: sharedWith,
+                    noteId: noteId,
+                    sharedAt: sharedAt
+                })
+            });
+
+            return await response.json();
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    static async unshareNote(noteId: string, sharedWith: string, token: string): Promise<noteResponse> {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/unshare-note`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                },
+                body: JSON.stringify({
+                    noteId: noteId,
+                    sharedWith: sharedWith,
+                })
+            });
+
+            return await response.json();
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    static async fetchSharedNotes(userId: string, token: string): Promise<NoteModel[]> {
+        try {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/notes/shared-with/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': token,
+                }
+            });
+
+            const res = await response.json();
+
+            const notes: NoteModel[] = res.notes.map((item: any) => {
+                const note = new NoteModel(
+                    item.userId,
+                    item.typeId,
+                    item.creationDate,
+                    item.id,
+                    item.title,
+                    item.content,
+                    item.color,
+                    item.markers.map((marker: any) => {
+                        return new MarkerModel(
+                            marker.userId,
+                            marker.description,
+                            marker.id
+                        )
+                    })
+                );
+
+                return note;
+            });
+
+            return notes;
         } catch (error: any) {
             throw new Error(error.message);
         }

@@ -19,6 +19,8 @@ export interface NoteContextType {
     setMarkers: React.Dispatch<React.SetStateAction<MarkerModel[]>>;
     notesCounter: number;
     setNotesCounter: React.Dispatch<React.SetStateAction<number>>;
+    sharedNotes: NoteModel[];
+    setSharedNotes: React.Dispatch<React.SetStateAction<NoteModel[]>>;
 }
 
 export const NoteContext = createContext<NoteContextType | null>(null);
@@ -29,6 +31,7 @@ export default function NotesProvider({ children }: UserProviderProps) {
     const [notes, setNotes] = useState<NoteModel[]>([]);
     const [markers, setMarkers] = useState<MarkerModel[]>([]);
     const [notesCounter, setNotesCounter] = useState<number>(0);
+    const [sharedNotes, setSharedNotes] = useState<NoteModel[]>([]);
 
     const { userData, token } = useContext(UserContext) ?? { userData: null, token: undefined };
 
@@ -65,6 +68,8 @@ export default function NotesProvider({ children }: UserProviderProps) {
                 setMarkers,
                 notesCounter,
                 setNotesCounter,
+                sharedNotes,
+                setSharedNotes
             }}
         >
             {children}

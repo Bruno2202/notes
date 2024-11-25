@@ -1,6 +1,6 @@
 import Toast from "react-native-toast-message";
 import { NoteModel } from "../models/NoteModel";
-import { NoteService } from "../services/NoteService";
+import { noteResponse, NoteService } from "../services/NoteService";
 import { UserModel } from "../models/UserModel";
 
 export class NoteController {
@@ -96,5 +96,79 @@ export class NoteController {
 		} catch (error: any) {
 			console.log(`Erro ao deletar marcador na nota: ${error.message}`);
 		}
+	}
+
+	static async shareNote(sharedBy: string, sharedWith: string, noteId: string, sharedAt: Date, token: string) {
+		try {
+			const res = await NoteService.shareNote(sharedBy, sharedWith, noteId, sharedAt, token);
+
+			if (res.success) {
+				Toast.show({
+					type: 'success',
+					text1: 'Nota compartilhada com sucesso!',
+				});
+			} else {
+				Toast.show({
+					type: 'info',
+					text1: 'Essa nota já foi compartilhada',
+				});
+			}
+		} catch (error: any) {
+			console.log(`Erro ao compartilhar nota: ${error.message}`);
+			Toast.show({
+				type: 'error',
+				text1: 'Não foi possível compartilhar nota',
+			});
+		}
+	}
+
+	static async unshareNote(noteId: string, sharedWith: string, token: string) {
+		try {
+			const res = await NoteService.unshareNote(noteId, sharedWith, token);
+
+			if (res.success) {
+				Toast.show({
+					type: 'success',
+					text1: res.message,
+				});
+			} else {
+				Toast.show({
+					type: 'error',
+					text1: 'Não foi possível descompartilhar nota',
+				});
+			}
+		} catch (error: any) {
+			console.log(`Erro ao descompartilhar nota: ${error.message}`);
+			Toast.show({
+				type: 'error',
+				text1: 'Não foi possível descompartilhar nota',
+			});
+		}
+	}
+
+	static async fetchSharedNotes(userId: string, token: string): Promise<NoteModel[]> {
+		try {
+			return await NoteService.fetchSharedNotes(userId, token);
+		} catch (error: any) {
+			console.log(`Erro ao buscar notas compartilhadas: ${error.message}`);
+			Toast.show({
+				type: 'error',
+				text1: 'Não foi possível buscar notas compartilhadas',
+			});
+
+			return [];
+		}
+	}	
+	
+	static async fetchAllMergedNotes(token: string, userData: UserModel): Promise<NoteModel[]> {
+		const userNotes: NoteModel[] = await NoteController.fetchNotes(token!, userData!);
+		const sharedNotes: NoteModel[] = await NoteController.fetchSharedNotes(userData?.getId!, token!);
+
+		const mergedNotes = [...userNotes, ...sharedNotes].filter(
+			(note, index, self) =>
+				index === self.findIndex((n) => n.getId === note.getId)
+		);
+
+        return mergedNotes;
 	}
 }

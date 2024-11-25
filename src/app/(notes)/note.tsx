@@ -7,31 +7,19 @@ import { NoteModel } from "../core/models/NoteModel";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
 export default function Note() {
-    const [title, setTitle] = useState<string>("");
-    const [content, setContent] = useState<string>("");
-    const [noteId, setNoteId] = useState<string | undefined>(undefined);
+    const { userData } = useContext(UserContext)!
+    const { note, setNote } = useContext(NoteContext)!
 
-    const { userData } = useContext(UserContext) ?? { userData: null };
-    const { note, setNote } = useContext(NoteContext) ?? {
-        note: null,
-        setNote: () => { }
-    };
-
-    useEffect(() => {
-        if (note?.getId) {
-            setNoteId(note.getId!);
-            setTitle(note.getTitle ? note.getTitle : "");
-            setContent(note.getContent ? note.getContent : "");
-        }
-    }, [note]);
+    const [title, setTitle] = useState<string>(note?.getTitle ? note.getTitle : "");
+    const [content, setContent] = useState<string>(note?.getContent ? note.getContent : "");
 
     useEffect(() => {
         if (title || content) {
             const newNote = new NoteModel(
-                userData?.getId!,
+                note?.getUserId!,
                 1,
                 note ? note.getCreationDate : new Date(),
-                noteId ? noteId : undefined,
+                note?.getId! ? note.getId! : undefined,
                 title,
                 content,
             );

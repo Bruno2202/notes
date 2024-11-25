@@ -9,9 +9,12 @@ import TabBarGradient from "@/src/components/TabBarGradient";
 import BottomModal from "@/src/components/BottomModal";
 import { useContext } from "react";
 import { ModalContext } from "@/src/contexts/ModalContext";
+import { UserContext } from "@/src/contexts/UserContext";
+import { Image } from "expo-image";
 
 export default function TabLayout() {
     const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!;
+    const { userData } = useContext(UserContext)!;
 
     return (
         <>
@@ -58,7 +61,17 @@ export default function TabLayout() {
                         tabBarShowLabel: false,
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => (
-                            <MaterialIcons name="person" size={size} color={color} />
+                            userData?.getUserPic ? (
+                                <Image
+                                    style={{
+                                        padding: 16,
+                                        borderRadius: 120
+                                    }}
+                                    source={{ uri: userData.getUserPic as string }}
+                                />
+                            ) : (
+                                <MaterialIcons name="person" size={size} color={color} />
+                            )
                         ),
                     }}
                 />

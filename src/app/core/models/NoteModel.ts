@@ -1,4 +1,6 @@
+import { NoteController } from "../controllers/NoteController";
 import { MarkerModel } from "./MarkerModel";
+import { UserModel } from "./UserModel";
 
 export class NoteModel {
     private id?: string;

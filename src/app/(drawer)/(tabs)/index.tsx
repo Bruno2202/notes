@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { router, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
@@ -14,19 +14,23 @@ import { ModalContext } from "@/src/contexts/ModalContext";
 import { NoteController } from "../../core/controllers/NoteController";
 import { NoteModel } from "../../core/models/NoteModel";
 import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { NoteService } from "../../core/services/NoteService";
+import { RefreshControl } from "react-native-gesture-handler";
 
 export default function Index() {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [filteredNotes, setFilteredNotes] = useState<NoteModel[]>([]);
+	const [refreshing, setRefreshing] = useState<boolean>(false);
 
 	const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!
-	const { note, setNote, notes, setNotes } = useContext(NoteContext)!
+	const { note, setNote, notes, setNotes, sharedNotes, setSharedNotes } = useContext(NoteContext)!
 	const { userData, token } = useContext(UserContext)!
 
 	useEffect(() => {
 		function searchNotesByName() {
-			const fNotes: NoteModel[] = notes.filter(note => note.getTitle!.toLowerCase().includes(searchTerm.toLowerCase()));
+			const fNotes: NoteModel[] = notes.filter(note =>
+				note.getTitle && note.getTitle.toLowerCase().includes(searchTerm.toLowerCase())
+			);
 			setFilteredNotes(fNotes);
 		}
 
@@ -53,9 +57,15 @@ export default function Index() {
 	);
 
 	async function fetchNotes() {
-		const notes: NoteModel[] = await NoteController.fetchNotes(token!, userData!);
-		setNotes(notes);
-	}
+		setNotes(await NoteController.fetchAllMergedNotes(token!, userData!));
+	};
+
+	async function refreshNotes() {
+		setRefreshing(true);
+		fetchNotes();
+		setRefreshing(false);
+	};
+
 
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -89,20 +99,24 @@ export default function Index() {
 
 				{notes.length > 0 ? (
 					<Animated.FlatList
-						data={searchTerm != "" ? filteredNotes : notes}
+						refreshControl={
+							<RefreshControl
+								progressBackgroundColor={theme.colorBlack}
+								colors={[theme.colorBlue]}
+								refreshing={refreshing}
+								onRefresh={refreshNotes}
+							/>
+						}
+						data={searchTerm !== "" ? filteredNotes : notes}
 						style={[styles.notesContainer]}
-						keyExtractor={(item) => item.getId!.toString()}
+						keyExtractor={(item, index) => item.getId ? item.getId : `key-${index}`}
 						renderItem={({ item }) => {
 							if (item) {
 								return (
-									<NotePreview
-										noteData={item}
-									/>
+									<NotePreview noteData={item} />
 								);
 							} else {
-								return (
-									<></>
-								)
+								return <></>;
 							}
 						}}
 						contentContainerStyle={{ paddingBottom: 120 }}

@@ -1,21 +1,21 @@
-import { Text, View, StyleSheet, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity, BackHandler } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useFocusEffect } from "expo-router";
+import { RefreshControl } from "react-native-gesture-handler";
+import { MaterialIcons } from "@expo/vector-icons";
+import Animated, { FadeIn, FadeInLeft, FadeOutUp, LinearTransition } from "react-native-reanimated";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteContext } from "@/src/contexts/NoteContext";
-import { MaterialIcons } from "@expo/vector-icons";
+import { ModalContext } from "@/src/contexts/ModalContext";
+import { AnimationContext } from "@/src/contexts/AnimationContext";
+import { NoteController } from "../../core/controllers/NoteController";
+import { NoteModel } from "../../core/models/NoteModel";
 
 import SearchBar from "@/src/components/SearchBar";
 import NotePreview from "@/src/components/NotePreview";
 import NotFoundCat from "@/src/components/NotFoundCat";
-import { ModalContext } from "@/src/contexts/ModalContext";
-import { NoteController } from "../../core/controllers/NoteController";
-import { NoteModel } from "../../core/models/NoteModel";
-import Animated, { FadeInLeft, FadeOutLeft } from "react-native-reanimated";
-import { NoteService } from "../../core/services/NoteService";
-import { RefreshControl } from "react-native-gesture-handler";
 
 export default function Index() {
 	const [searchTerm, setSearchTerm] = useState<string>("");
@@ -25,6 +25,7 @@ export default function Index() {
 	const { filterIsVisible, setFilterIsVisible } = useContext(ModalContext)!
 	const { note, setNote, notes, setNotes, sharedNotes, setSharedNotes } = useContext(NoteContext)!
 	const { userData, token } = useContext(UserContext)!
+	const { welcomeIsVisible, setWelcomeIsVisible } = useContext(AnimationContext)!
 
 	useEffect(() => {
 		function searchNotesByName() {
@@ -36,6 +37,28 @@ export default function Index() {
 
 		searchNotesByName();
 	}, [searchTerm]);
+
+	useEffect(() => {
+		const handleBackPress = () => {
+			BackHandler.exitApp();
+			return true;
+		};
+
+		BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+		return () => {
+			BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (welcomeIsVisible) {
+			const timer = setTimeout(() => {
+				setWelcomeIsVisible(false);
+			}, 5000);
+			return () => clearTimeout(timer);
+		}
+	}, []);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -66,27 +89,32 @@ export default function Index() {
 		setRefreshing(false);
 	};
 
-
 	return (
 		<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
 			<KeyboardAvoidingView
 				style={[styles.container]}
 				behavior={"padding"}
 			>
+				{welcomeIsVisible && (
+					<Animated.View
+						layout={LinearTransition}
+						entering={FadeInLeft}
+						exiting={FadeOutUp.duration(100)}
+						style={[styles.saluation]}
+					>
+						{userData &&
+							<Text style={styles.saluationText}>
+								Olá,
+								{"\n"}
+								{userData.getName}
+							</Text>
+						}
+					</Animated.View>
+				)}
 				<Animated.View
-					entering={FadeInLeft}
-					exiting={FadeOutLeft}
-					style={[styles.saluation]}
+					layout={LinearTransition}
+					style={styles.searchBarContainer}
 				>
-					{userData &&
-						<Text style={styles.saluationText}>
-							Olá,
-							{"\n"}
-							{userData.getName}
-						</Text>
-					}
-				</Animated.View>
-				<View style={styles.searchBarContainer}>
 					<SearchBar
 						onChangeTerm={setSearchTerm}
 					/>
@@ -95,10 +123,12 @@ export default function Index() {
 					}}>
 						<MaterialIcons name="filter-list" color={theme.colorWhite} size={24} />
 					</TouchableOpacity>
-				</View>
+				</Animated.View>
 
 				{notes.length > 0 ? (
 					<Animated.FlatList
+						layout={LinearTransition}
+						itemLayoutAnimation={LinearTransition}
 						refreshControl={
 							<RefreshControl
 								progressBackgroundColor={theme.colorBlack}

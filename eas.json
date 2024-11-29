@@ -5,17 +5,20 @@
   },
   "build": {
     "development": {
+      "environment": "development",
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development"
     },
     "preview": {
+      "environment": "preview",
       "android": {
         "buildType": "apk"
       },
       "channel": "preview"
     },
     "production": {
+      "environment": "production",
       "android": {
         "buildType": "apk"
       },

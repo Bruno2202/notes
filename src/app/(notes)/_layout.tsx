@@ -20,10 +20,6 @@ export default function Layout() {
 
     const router = useRouter();
 
-    const handleBackPress = () => {
-        router.navigate('/(tabs)');
-    };
-
     return (
         <View style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             <Stack>
@@ -41,7 +37,7 @@ export default function Layout() {
                         headerTitleAlign: 'center',
                         headerBackVisible: false,
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => handleBackPress()}>
+                            <TouchableOpacity onPress={() => router.navigate('/(tabs)')}>
                                 <MaterialIcons color={theme.colorWhite} size={22.5} name="arrow-back" />
                             </TouchableOpacity>
                         ),

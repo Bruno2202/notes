@@ -22,7 +22,7 @@ export class MarkerController {
             console.log(`Erro ao criar marcador: ${error.message}`);
             Toast.show({
                 type: 'error',
-                text1: 'Não foi possível criar marcador',
+                text1: error.message,
             });
         }
     }

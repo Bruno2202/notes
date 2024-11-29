@@ -81,11 +81,11 @@ function DrawerContent() {
 
 export default function Layout() {
     const segments = useSegments();
-    const isDrawerDisabled = 
-        JSON.stringify(segments) === JSON.stringify(["(drawer)", "(tabs)"]) ||
-        JSON.stringify(segments) === JSON.stringify(["(notes)", "marker"]) ||
-        JSON.stringify(segments) === JSON.stringify(["(notes)", "note"]) 
-
+    const showDrawer = 
+    JSON.stringify(segments) === JSON.stringify(["(drawer)", "(tabs)"]) ||
+    JSON.stringify(segments) === JSON.stringify(["(notes)", "marker"]) ||
+    JSON.stringify(segments) === JSON.stringify(["(notes)", "note"]) 
+    
     return (
         <GestureHandlerRootView style={{ backgroundColor: theme.colorBlack, flex: 1 }}>
             <Drawer
@@ -104,8 +104,8 @@ export default function Layout() {
                         shadowColor: 'transparent',
                     },
                     title: '',
-                    headerShown: isDrawerDisabled,
-                    swipeEnabled: isDrawerDisabled
+                    headerShown: showDrawer,
+                    swipeEnabled: showDrawer
                 }}
             >
                 <Drawer.Screen

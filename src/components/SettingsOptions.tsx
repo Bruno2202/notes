@@ -33,6 +33,8 @@ async function deleteUser(userData: UserModel, token: string) {
             type: 'success',
             text1: 'Usuário excluido com sucesso!',
         });
+
+        router.navigate('/(auth)');
     } catch (error: any) {
         console.log(`Erro ao excluir usuário: ${error.message}`);
         Toast.show({
@@ -105,7 +107,7 @@ export default function SettingsOptions() {
                 iconType="MaterialCommunityIcons"
                 iconName="information"
                 colorBackgroundGradient={['#1A94F7', '#1A38D3']}
-                onPress={() => navigation('/info')}
+                onPress={() => router.push('/(settings)/info')}
                 showSwitch={false}
             />
             <Separator />

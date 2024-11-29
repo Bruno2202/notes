@@ -65,14 +65,7 @@ export class NoteController {
 
 	static async deleteNote(token: string, id: string) {
 		try {
-			const deleted = await NoteService.delete(token, id);
-
-			if (deleted) {
-				Toast.show({
-					type: 'success',
-					text1: 'Nota deletada com sucesso!',
-				});
-			}
+			await NoteService.delete(token, id);
 		} catch (error: any) {
 			console.log(`Erro ao deletar nota: ${error.message}`);
 			Toast.show({
@@ -158,8 +151,8 @@ export class NoteController {
 
 			return [];
 		}
-	}	
-	
+	}
+
 	static async fetchAllMergedNotes(token: string, userData: UserModel): Promise<NoteModel[]> {
 		const userNotes: NoteModel[] = await NoteController.fetchNotes(token!, userData!);
 		const sharedNotes: NoteModel[] = await NoteController.fetchSharedNotes(userData?.getId!, token!);
@@ -169,6 +162,6 @@ export class NoteController {
 				index === self.findIndex((n) => n.getId === note.getId)
 		);
 
-        return mergedNotes;
+		return mergedNotes;
 	}
 }

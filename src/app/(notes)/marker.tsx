@@ -9,6 +9,7 @@ import { MarkerController } from "../core/controllers/MarkerController";
 import Input from "@/src/components/Input";
 import Separator from "@/src/components/Separator";
 import NotFoundCat from "@/src/components/NotFoundCat";
+import Animated, { FadeInLeft, FadeOutUp } from "react-native-reanimated";
 
 interface FlatListTypes {
     item: MarkerModel;
@@ -64,7 +65,9 @@ export default function Marker() {
             <Separator marginVertical={32} />
 
             {markers.length > 0 ? (
-                <FlatList
+                <Animated.FlatList
+                    entering={FadeInLeft}
+                    exiting={FadeOutUp.duration(100)}
                     data={markers}
                     keyExtractor={(item) => item.getId!.toString()}
                     renderItem={({ item, index }: FlatListTypes) => {

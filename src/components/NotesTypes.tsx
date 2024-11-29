@@ -9,7 +9,7 @@ import Separator from "./Separator";
 export default function NotesTypes() {
 
     function navigation(route: Href) {
-        router.push(route);
+        router.replace(route);
     }
 
     return (

@@ -16,7 +16,8 @@ export default function SearchBar({ onChangeTerm }: PropTypes) {
                 color={theme.colorGrey}
             />
             <TextInput
-                placeholder="Lista de compras"
+                inputMode="search"
+                placeholder={"Pesquisar"}
                 placeholderTextColor={theme.colorGrey}
                 style={styles.input}
                 onChangeText={onChangeTerm}

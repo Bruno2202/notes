@@ -1,10 +1,11 @@
-import { StyleSheet, TextInput } from "react-native";
+import { BackHandler, StyleSheet, TextInput } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
 import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
+import { router } from "expo-router";
 
 export default function Note() {
     const { userData } = useContext(UserContext)!
@@ -27,6 +28,19 @@ export default function Note() {
             setNote(newNote);
         }
     }, [userData, title, content]);
+
+    useEffect(() => {
+        const handleBackPress = () => {
+            router.navigate('/(drawer)')
+            return true;
+        };
+
+        BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+        };
+    }, []);
 
     const keyboard = useAnimatedKeyboard({
         isStatusBarTranslucentAndroid: true

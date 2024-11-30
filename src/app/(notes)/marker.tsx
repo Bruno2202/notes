@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, FlatList, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useContext, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
@@ -9,7 +9,7 @@ import { MarkerController } from "../core/controllers/MarkerController";
 import Input from "@/src/components/Input";
 import Separator from "@/src/components/Separator";
 import NotFoundCat from "@/src/components/NotFoundCat";
-import Animated, { FadeInLeft, FadeOutUp } from "react-native-reanimated";
+import Animated, { FadeInLeft, FadeOutLeft, FadeOutUp, LinearTransition } from "react-native-reanimated";
 
 interface FlatListTypes {
     item: MarkerModel;
@@ -44,70 +44,76 @@ export default function Marker() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Marcadores
-            </Text>
-            <View style={styles.addMarkerContainer}>
-                <View style={styles.markerInput}>
-                    <Input
-                        placeholder="Marcador"
-                        icon="label"
-                        value={newMarker}
-                        onChangeText={(text: string) => setNewMarker(text)}
-                    />
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    Marcadores
+                </Text>
+                <View style={styles.addMarkerContainer}>
+                    <View style={styles.markerInput}>
+                        <Input
+                            placeholder="Marcador"
+                            icon="label"
+                            value={newMarker}
+                            onChangeText={(text: string) => setNewMarker(text)}
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.addButton} activeOpacity={0.6} onPress={() => handleCreateMarker()}>
+                        <MaterialIcons name="add" size={24} color={theme.colorWhite} />
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.addButton} activeOpacity={0.6} onPress={() => handleCreateMarker()}>
-                    <MaterialIcons name="add" size={24} color={theme.colorWhite} />
-                </TouchableOpacity>
-            </View>
 
-            <Separator marginVertical={32} />
+                <Separator marginVertical={32} />
 
-            {markers.length > 0 ? (
-                <Animated.FlatList
-                    entering={FadeInLeft}
-                    exiting={FadeOutUp.duration(100)}
-                    data={markers}
-                    keyExtractor={(item) => item.getId!.toString()}
-                    renderItem={({ item, index }: FlatListTypes) => {
-                        if (item) {
-                            return (
-                                <View style={styles.markersContainer}>
-                                    <View style={styles.markerInput}>
-                                        <Input
-                                            placeholder="Marcador"
-                                            value={item.getDescription}
-                                            icon="label"
-                                            onChangeText={(text: string) => handleDescriptionChange(index, text)}
-                                            editable={false}
-                                        />
-                                    </View>
-                                    <TouchableOpacity
-                                        style={[
-                                            styles.removeButton,
-                                        ]}
-                                        activeOpacity={0.6}
-                                        onPress={() => handleDeleteMarker(item)}
+                {markers.length > 0 ? (
+                    <Animated.FlatList
+                        layout={LinearTransition}
+                        itemLayoutAnimation={LinearTransition}
+                        data={markers}
+                        keyExtractor={(item) => item.getId!.toString()}
+                        renderItem={({ item, index }: FlatListTypes) => {
+                            if (item) {
+                                return (
+                                    <Animated.View
+                                        entering={FadeInLeft}
+                                        exiting={FadeOutLeft}
+                                        style={styles.markersContainer}
                                     >
-                                        <MaterialIcons name="remove" size={24} color={theme.colorWhite} />
-                                    </TouchableOpacity>
-                                </View>
-                            );
-                        } else {
-                            return null;
-                        }
-                    }}
-                    contentContainerStyle={{ paddingBottom: 120 }}
-                />
-            ) : (
-                <NotFoundCat
-                    text="Pra que marcadores, não é mesmo?"
-                    subtext="(Você não possui marcadores)"
-                />
-            )}
+                                        <View style={styles.markerInput}>
+                                            <Input
+                                                placeholder="Marcador"
+                                                value={item.getDescription}
+                                                icon="label"
+                                                onChangeText={(text: string) => handleDescriptionChange(index, text)}
+                                                editable={false}
+                                            />
+                                        </View>
+                                        <TouchableOpacity
+                                            style={[
+                                                styles.removeButton,
+                                            ]}
+                                            activeOpacity={0.6}
+                                            onPress={() => handleDeleteMarker(item)}
+                                        >
+                                            <MaterialIcons name="remove" size={24} color={theme.colorWhite} />
+                                        </TouchableOpacity>
+                                    </Animated.View>
+                                );
+                            } else {
+                                return null;
+                            }
+                        }}
+                        contentContainerStyle={{ paddingBottom: 120 }}
+                    />
+                ) : (
+                    <NotFoundCat
+                        text="Pra que marcadores, não é mesmo?"
+                        subtext="(Você não possui marcadores)"
+                    />
+                )}
 
-        </View>
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 

@@ -9,6 +9,7 @@ import { MarkerController } from "../core/controllers/MarkerController";
 import NotFoundCat from "@/src/components/NotFoundCat";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteController } from "../core/controllers/NoteController";
+import Animated, { FadeInLeft } from "react-native-reanimated";
 
 interface FlatListTypes {
     item: MarkerModel;

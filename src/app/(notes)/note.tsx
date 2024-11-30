@@ -4,7 +4,7 @@ import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
-import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { router } from "expo-router";
 
 export default function Note() {
@@ -41,13 +41,6 @@ export default function Note() {
             BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
         };
     }, []);
-
-    const keyboard = useAnimatedKeyboard({
-        isStatusBarTranslucentAndroid: true
-    });
-    const animatedStyles = useAnimatedStyle(() => ({
-        marginBottom: keyboard.height.value * 0.5
-    }));
 
     return (
         <Animated.View style={[styles.container]}>

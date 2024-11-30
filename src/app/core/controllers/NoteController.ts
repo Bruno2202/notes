@@ -17,12 +17,6 @@ export class NoteController {
 					note?.getContent,
 				)
 			);
-
-
-			Toast.show({
-				type: 'success',
-				text1: 'Nota salva com sucesso!',
-			});
 		} catch (error: any) {
 			console.log(`Erro ao criar nota: ${error.message}`);
 			Toast.show({

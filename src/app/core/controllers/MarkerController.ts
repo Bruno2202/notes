@@ -13,11 +13,6 @@ export class MarkerController {
                     descritpion,
                 )
             );
-
-            Toast.show({
-                type: 'success',
-                text1: 'Marcador criado com sucesso!',
-            });
         } catch (error: any) {
             console.log(`Erro ao criar marcador: ${error.message}`);
             Toast.show({

@@ -47,7 +47,7 @@ export default function NotePreview({ noteData }: PropTypes) {
     };
 
     function navigation(route: Href) {
-        router.navigate(route);
+        router.push(route);
     }
 
     function selectNote() {

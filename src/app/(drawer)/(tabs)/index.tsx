@@ -76,6 +76,8 @@ export default function Index() {
 			} else if (userData) {
 				fetchNotes();
 			}
+
+			console.log(note)
 		}, [note, userData])
 	);
 

@@ -37,7 +37,7 @@ export default function Layout() {
                         headerTitleAlign: 'center',
                         headerBackVisible: false,
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => { router.navigate('/(tabs)') }}>
+                            <TouchableOpacity onPress={() => router.navigate('/(tabs)')}>
                                 <MaterialIcons color={theme.colorWhite} size={22.5} name="arrow-back" />
                             </TouchableOpacity>
                         ),

@@ -85,7 +85,7 @@ export default function Marker() {
                                                 value={item.getDescription}
                                                 icon="label"
                                                 onChangeText={(text: string) => handleDescriptionChange(index, text)}
-                                                readOnly={true}
+                                                editable={false}
                                             />
                                         </View>
                                         <TouchableOpacity

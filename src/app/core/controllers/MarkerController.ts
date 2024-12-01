@@ -40,6 +40,7 @@ export class MarkerController {
                     Toast.show({
                         type: 'error',
                         text1: 'Não foi possível buscar marcadores',
+                        text2: error.message
                     });
                     return [];
             }

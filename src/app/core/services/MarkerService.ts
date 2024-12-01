@@ -146,6 +146,8 @@ export class MarkerService {
     }
 
     static async delete(token: string, id: string) {
+        console.log(id)
+
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'DELETE',

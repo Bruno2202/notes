@@ -12,9 +12,10 @@ interface InputProps {
     onFocus?: () => void;
     onBlur?: () => void;
     editable?: boolean
+    readOnly?: boolean
 }
 
-export default function Input({ placeholder, icon, onChangeText, maxLength, value, onFocus, onBlur, editable }: InputProps) {
+export default function Input({ placeholder, icon, onChangeText, maxLength, value, onFocus, onBlur, editable, readOnly }: InputProps) {
     return (
         <View style={styles.container}>
             <TextInput
@@ -27,6 +28,7 @@ export default function Input({ placeholder, icon, onChangeText, maxLength, valu
                 onFocus={onFocus}
                 onBlur={onBlur}
                 editable={!editable ? editable : !editable}
+                readOnly={!readOnly ? readOnly : !readOnly}
             />
             {icon &&
                 <MaterialIcons

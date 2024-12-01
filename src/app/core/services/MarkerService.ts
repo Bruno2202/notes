@@ -146,8 +146,6 @@ export class MarkerService {
     }
 
     static async delete(token: string, id: string) {
-        console.log(id)
-
         try {
             const response = await fetch(`${process.env.EXPO_PUBLIC_APIHOST}/marker/${id}`, {
                 method: 'DELETE',
@@ -158,7 +156,6 @@ export class MarkerService {
 
             if (!response.ok) {
                 const data = await response.json();
-                console.log(data)
                 throw new Error(data?.message || 'Erro ao deletar marcador');
             }
 

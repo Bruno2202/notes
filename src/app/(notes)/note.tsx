@@ -1,11 +1,11 @@
-import { BackHandler, StyleSheet, TextInput } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { BackHandler, Keyboard, StyleSheet, TextInput, View, ScrollView } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { NoteModel } from "../core/models/NoteModel";
-import Animated from "react-native-reanimated";
-import { router } from "expo-router";
+import Animated, { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
+import { router, useFocusEffect } from "expo-router";
 
 export default function Note() {
     const { userData } = useContext(UserContext)!
@@ -18,7 +18,7 @@ export default function Note() {
         if (title || content) {
             const newNote = new NoteModel(
                 note?.getUserId!,
-                1,
+                1,  // Tipo da nota (1: texto)
                 note ? note.getCreationDate : new Date(),
                 note?.getId! ? note.getId! : undefined,
                 title,
@@ -42,43 +42,67 @@ export default function Note() {
         };
     }, []);
 
+    useFocusEffect(
+        useCallback(() => {
+            Keyboard.dismiss();
+        }, [])
+    );
+
+    const keyboard = useAnimatedKeyboard({
+        isStatusBarTranslucentAndroid: true
+    });
+    const keyboardStyles = useAnimatedStyle(() => ({
+        width: '100%',
+        marginBottom: keyboard.height.value
+    }));
+
     return (
-        <Animated.View style={[styles.container]}>
-            <TextInput
-                multiline
-                style={styles.noteTitle}
-                onChangeText={setTitle}
-                placeholder="Título"
-                placeholderTextColor={theme.colorMediumGrey}
-                selectionColor={theme.colorBlue}
-                value={title}
-            />
-            <TextInput
-                multiline
-                style={styles.noteContent}
-                onChangeText={setContent}
-                placeholder="Escreva aqui..."
-                placeholderTextColor={theme.colorMediumGrey}
-                textAlignVertical="top"
-                selectionColor={theme.colorBlue}
-                value={content}
-            />
-        </Animated.View>
+        <View style={styles.container}>
+            <Animated.View style={styles.inputsContainer}>
+                <TextInput
+                    textAlignVertical="top"
+                    autoCapitalize="none"
+                    multiline
+                    style={styles.noteTitle}
+                    onChangeText={setTitle}
+                    placeholder="Título"
+                    placeholderTextColor={theme.colorMediumGrey}
+                    selectionColor={theme.colorBlue}
+                    value={title}
+                />
+                <ScrollView keyboardShouldPersistTaps="handled">
+                    <TextInput
+                        textAlignVertical="top"
+                        autoCapitalize="none"
+                        multiline
+                        style={styles.noteContent}
+                        onChangeText={setContent}
+                        placeholder="Escreva aqui..."
+                        placeholderTextColor={theme.colorMediumGrey}
+                        selectionColor={theme.colorBlue}
+                        value={content}
+                    />
+                </ScrollView>
+            </Animated.View>
+            <Animated.View style={[keyboardStyles]} />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    keyboardAvoidingContainer: {
-        flex: 1,
-    },
     container: {
-        paddingHorizontal: theme.paddingHorizontal,
         backgroundColor: theme.colorBlack,
         flex: 1,
-        position: 'relative'
     },
-    scrollContainer: {
+    inputsContainer: {
+        backgroundColor: theme.colorBlack,
+        paddingHorizontal: theme.paddingHorizontal,
+        flex: 1,
+        position: 'relative',
         paddingBottom: 20,
+    },
+    contentContainer: {
+        flex: 1
     },
     noteTitle: {
         fontFamily: 'fontFamilySemiBold',
@@ -86,15 +110,13 @@ const styles = StyleSheet.create({
         fontSize: 28,
     },
     noteContent: {
+        flex: 1,
         fontFamily: 'fontFamilyRegular',
         marginTop: 12,
         color: theme.colorGrey,
         fontSize: 16,
         minHeight: 100,
         height: 'auto',
+        textAlignVertical: 'top'
     },
-    teste: {
-        width: '100%',
-        backgroundColor: theme.colorBlue,
-    }
 });

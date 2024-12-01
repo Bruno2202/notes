@@ -1,4 +1,4 @@
-import { Href, router } from 'expo-router';
+import { router } from 'expo-router';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 
@@ -10,25 +10,23 @@ import { UserContext } from '../contexts/UserContext';
 import { useContext } from 'react';
 import { NoteContext } from '../contexts/NoteContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AnimationContext } from '../contexts/AnimationContext';
+
+interface OptionsTypes {
+    description: string;
+    iconName: any;
+    iconType: string;
+    colorBackgroundGradient: string[];
+    onPress: () => void;
+    showSwitch: boolean;
+}
 
 export default function UserOptions() {
 
     const { setUserData } = useContext(UserContext) ?? { setUserData: () => { } };
     const { setNotes } = useContext(NoteContext) ?? { setNotes: () => { } };
+    const { setWelcomeIsVisible } = useContext(AnimationContext)!
 
-    const navigation = (route: Href) => {
-        router.push(route);
-    }
-
-    interface OptionsTypes {
-        description: string;
-        iconName: any;
-        iconType: string;
-        colorBackgroundGradient: string[];
-        onPress: () => void;
-        showSwitch: boolean;
-    }
-    
     function Option({ description, iconName, iconType, colorBackgroundGradient, onPress, showSwitch }: OptionsTypes) {
         return (
             <TouchableOpacity
@@ -62,19 +60,19 @@ export default function UserOptions() {
                 iconType="MaterialIcons"
                 iconName="settings"
                 colorBackgroundGradient={['#1A94F7', '#1A38D3']}
-                onPress={() => navigation('/(settings)')}
+                onPress={() => router.push('/(settings)')}
                 showSwitch={false}
             />
             <Separator />
-            <Option
+            {/* <Option
                 description="Editar perfil"
                 iconType="MaterialIcons"
                 iconName="edit"
                 colorBackgroundGradient={['#1A94F7', '#1A38D3']}
                 onPress={() => console.log()}
                 showSwitch={false}
-            />
-            <Separator />
+            /> */}
+            {/* <Separator /> */}
             <Option
                 description="Sair"
                 iconType="MaterialIcons"
@@ -84,6 +82,7 @@ export default function UserOptions() {
                     await AuthService.logout();
                     setUserData(null);
                     setNotes([]);
+                    setWelcomeIsVisible(true);
                 }}
                 showSwitch={false}
             />

@@ -39,19 +39,6 @@ export default function Index() {
 	}, [searchTerm]);
 
 	useEffect(() => {
-		const handleBackPress = () => {
-			BackHandler.exitApp();
-			return true;
-		};
-
-		BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-		return () => {
-			BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-		};
-	}, []);
-
-	useEffect(() => {
 		if (welcomeIsVisible) {
 			const timer = setTimeout(() => {
 				setWelcomeIsVisible(false);
@@ -59,6 +46,21 @@ export default function Index() {
 			return () => clearTimeout(timer);
 		}
 	}, []);
+
+	useFocusEffect(
+		useCallback(() => {
+			const handleBackPress = () => {
+				BackHandler.exitApp();
+				return true;
+			};
+
+			const subscription = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+			return () => {
+				subscription.remove();
+			};
+		}, [])
+	);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -76,8 +78,6 @@ export default function Index() {
 			} else if (userData) {
 				fetchNotes();
 			}
-
-			console.log(note)
 		}, [note, userData])
 	);
 
@@ -129,6 +129,7 @@ export default function Index() {
 
 				{notes.length > 0 ? (
 					<Animated.FlatList
+						removeClippedSubviews={true}
 						layout={LinearTransition}
 						itemLayoutAnimation={LinearTransition}
 						refreshControl={

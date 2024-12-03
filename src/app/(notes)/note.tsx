@@ -1,4 +1,4 @@
-import { BackHandler, Keyboard, StyleSheet, TextInput, View, ScrollView } from "react-native";
+import { BackHandler, Keyboard, StyleSheet, TextInput, View, ScrollView, TouchableWithoutFeedback } from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import { NoteContext } from "@/src/contexts/NoteContext";
@@ -42,18 +42,13 @@ export default function Note() {
         };
     }, []);
 
-    useFocusEffect(
-        useCallback(() => {
-            Keyboard.dismiss();
-        }, [])
-    );
-
     const keyboard = useAnimatedKeyboard({
         isStatusBarTranslucentAndroid: true
     });
     const keyboardStyles = useAnimatedStyle(() => ({
         width: '100%',
-        marginBottom: keyboard.height.value
+        marginBottom: keyboard.height.value,
+        backgroundColor: 'red'
     }));
 
     return (

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export default function TabBarGradient() {
     return (
         <LinearGradient
-            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)', 'rgba(0, 0, 0, 1)']}
+            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
             style={styles.gradient}
             pointerEvents="none"
         />
@@ -18,6 +18,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 100,
+        height: 100
     },
 });

@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Text, View, TouchableOpacity, BackHandler } from "react-native";
+import { Text, View, TouchableOpacity, BackHandler, Keyboard } from "react-native";
 
 import { theme } from "@/theme";
 import { Image } from "expo-image";
@@ -37,7 +37,13 @@ export default function Layout() {
                         headerTitleAlign: 'center',
                         headerBackVisible: false,
                         headerLeft: () => (
-                            <TouchableOpacity onPress={() => router.navigate('/(tabs)')}>
+                            <TouchableOpacity onPress={() => {
+                                if (Keyboard.isVisible()) {
+                                    Keyboard.dismiss()
+                                } else {
+                                    router.navigate('/(tabs)')
+                                }
+                            }}>
                                 <MaterialIcons color={theme.colorWhite} size={22.5} name="arrow-back" />
                             </TouchableOpacity>
                         ),

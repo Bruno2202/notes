@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { theme } from "@/theme";
@@ -13,9 +13,21 @@ interface InputProps {
     onBlur?: () => void;
     editable?: boolean
     readOnly?: boolean
+    onEndEditing?: () => void;
 }
 
-export default function Input({ placeholder, icon, onChangeText, maxLength, value, onFocus, onBlur, editable, readOnly }: InputProps) {
+export default function Input({
+    placeholder,
+    icon,
+    onChangeText,
+    maxLength,
+    value,
+    onFocus,
+    onBlur,
+    editable,
+    readOnly,
+    onEndEditing
+}: InputProps) {
     return (
         <View style={styles.container}>
             <TextInput
@@ -29,9 +41,11 @@ export default function Input({ placeholder, icon, onChangeText, maxLength, valu
                 onBlur={onBlur}
                 editable={!editable ? editable : !editable}
                 readOnly={!readOnly ? readOnly : !readOnly}
+                onEndEditing={onEndEditing}
             />
             {icon &&
                 <MaterialIcons
+                    style={{ paddingHorizontal: 16, pointerEvents: 'none'}}
                     name={icon}
                     size={24}
                     color={theme.colorGrey}
@@ -48,11 +62,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         borderRadius: 8,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
         backgroundColor: theme.colorDarkGrey,
     },
     input: {
+        paddingVertical: 12,
+        paddingLeft: 16,
         flex: 1,
         alignItems: 'center',
         width: '90%',

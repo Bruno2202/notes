@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useFocusEffect } from "expo-router";
 import { RefreshControl } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
-import Animated, { FadeIn, FadeInLeft, FadeOutUp, LinearTransition } from "react-native-reanimated";
+import Animated, { Easing, FadeIn, FadeInLeft, FadeOutLeft, FadeOutUp, LinearTransition } from "react-native-reanimated";
 
 import { theme } from "@/theme";
 import { UserContext } from "@/src/contexts/UserContext";
@@ -39,13 +39,13 @@ export default function Index() {
 	}, [searchTerm]);
 
 	useEffect(() => {
-		if (welcomeIsVisible) {
+		if (welcomeIsVisible && userData) {
 			const timer = setTimeout(() => {
 				setWelcomeIsVisible(false);
-			}, 5000);
+			}, 4000);
 			return () => clearTimeout(timer);
 		}
-	}, []);
+	}, [userData]);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -129,6 +129,8 @@ export default function Index() {
 
 				{notes.length > 0 ? (
 					<Animated.FlatList
+						entering={FadeInLeft}
+						exiting={FadeOutLeft}
 						removeClippedSubviews={true}
 						layout={LinearTransition}
 						itemLayoutAnimation={LinearTransition}
@@ -190,6 +192,5 @@ const styles = StyleSheet.create({
 	notesContainer: {
 		paddingHorizontal: theme.paddingHorizontal,
 		width: '100%',
-		height: 10000
 	},
 });
